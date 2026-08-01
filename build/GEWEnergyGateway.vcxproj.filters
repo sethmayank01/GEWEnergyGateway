@@ -34,10 +34,19 @@
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\platform\windows\SerialPortWin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\protocol\Modbus.cpp">
+    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\protocol\CRC16.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\protocol\ModbusFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\protocol\ModbusRTU.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\queue\UploadQueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\HexDump.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\Logger.cpp">

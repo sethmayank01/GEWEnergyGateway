@@ -9,6 +9,9 @@ C:\Users\sethm\GEWEnergyGateway\src\network\HttpClient.cpp;C:\Users\sethm\GEWEne
 C:\Users\sethm\GEWEnergyGateway\src\platform\esp32\HttpESP.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\HttpESP.obj
 C:\Users\sethm\GEWEnergyGateway\src\platform\esp32\SerialESP.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\SerialESP.obj
 C:\Users\sethm\GEWEnergyGateway\src\platform\windows\SerialPortWin.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\SerialPortWin.obj
-C:\Users\sethm\GEWEnergyGateway\src\protocol\Modbus.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Modbus.obj
+C:\Users\sethm\GEWEnergyGateway\src\protocol\CRC16.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\CRC16.obj
+C:\Users\sethm\GEWEnergyGateway\src\protocol\ModbusFrame.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\ModbusFrame.obj
+C:\Users\sethm\GEWEnergyGateway\src\protocol\ModbusRTU.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\ModbusRTU.obj
 C:\Users\sethm\GEWEnergyGateway\src\queue\UploadQueue.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\UploadQueue.obj
+C:\Users\sethm\GEWEnergyGateway\src\utils\HexDump.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\HexDump.obj
 C:\Users\sethm\GEWEnergyGateway\src\utils\Logger.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Logger.obj

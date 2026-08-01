@@ -3,6 +3,11 @@
 #include "config/Configuration.h"
 #include "platform/windows/SerialPortWin.h"
 #include "utils/Logger.h"
+#include "protocol/CRC16.h"
+#include "protocol/ModbusFrame.h"
+#include "protocol/ModbusException.h"
+#include "protocol/ModbusRTU.h"
+
 
 Gateway::Gateway()
 {
@@ -43,9 +48,34 @@ void Gateway::Run()
     SerialPortWin serial(config.Get().meter);
 
     if (!serial.Open())
+    {
+        Logger::Error("Cannot open COM port.");
         return;
+    }
 
-    Logger::Info("Serial communication ready.");
+    
+    ModbusRTU modbus(serial);
+
+    std::vector<uint8_t> payload;
+
+    ModbusException result =
+        modbus.ReadHoldingRegisters(
+            static_cast<uint8_t>(config.Get().meter.slaveId),
+            142,
+            2,
+            payload);
+
+    if (result == ModbusException::None)
+    {
+        Logger::Info("Modbus Read Successful.");
+        Logger::Hex("Payload:", payload);
+    }
+    else
+    {
+        Logger::Error("Modbus Read Failed: " + ToString(result));
+    }
 
     serial.Close();
+
+    Logger::Info("Serial Port Closed.");
 }

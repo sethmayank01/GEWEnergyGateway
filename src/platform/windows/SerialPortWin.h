@@ -15,6 +15,7 @@ public:
 
     bool Open() override;
 
+    void Flush() override;
     void Close() override;
 
     bool IsOpen() const override;

@@ -379,8 +379,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\platform\esp32\HttpESP.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\platform\esp32\SerialESP.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\platform\windows\SerialPortWin.cpp" />
-    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\protocol\Modbus.cpp" />
+    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\protocol\CRC16.cpp" />
+    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\protocol\ModbusFrame.cpp" />
+    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\protocol\ModbusRTU.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\queue\UploadQueue.cpp" />
+    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\HexDump.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\Logger.cpp" />
   </ItemGroup>
   <ItemGroup />

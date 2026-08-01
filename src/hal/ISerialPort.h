@@ -14,6 +14,8 @@ public:
 
     virtual void Close() = 0;
 
+    virtual void Flush() = 0;
+
     virtual bool IsOpen() const = 0;
 
     virtual bool Write(const std::vector<uint8_t>& data) = 0;

@@ -1,4 +1,5 @@
 #include "Logger.h"
+#include "HexDump.h"
 
 #include <iostream>
 
@@ -23,5 +24,16 @@ void Logger::Error(const std::string& message)
     std::cout
         << "[ERROR] "
         << message
+        << std::endl;
+}
+
+void Logger::Hex(
+    const std::string& prefix,
+    const std::vector<uint8_t>& data)
+{
+    std::cout
+        << prefix
+        << " "
+        << HexDump::ToString(data)
         << std::endl;
 }
