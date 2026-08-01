@@ -8,8 +8,7 @@ C:\Users\sethm\GEWEnergyGateway\src\meters\ABBM1M12.cpp;C:\Users\sethm\GEWEnergy
 C:\Users\sethm\GEWEnergyGateway\src\network\HttpClient.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\HttpClient.obj
 C:\Users\sethm\GEWEnergyGateway\src\platform\esp32\HttpESP.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\HttpESP.obj
 C:\Users\sethm\GEWEnergyGateway\src\platform\esp32\SerialESP.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\SerialESP.obj
-C:\Users\sethm\GEWEnergyGateway\src\platform\windows\HttpWin.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\HttpWin.obj
-C:\Users\sethm\GEWEnergyGateway\src\platform\windows\SerialWin.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\SerialWin.obj
+C:\Users\sethm\GEWEnergyGateway\src\platform\windows\SerialPortWin.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\SerialPortWin.obj
 C:\Users\sethm\GEWEnergyGateway\src\protocol\Modbus.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Modbus.obj
 C:\Users\sethm\GEWEnergyGateway\src\queue\UploadQueue.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\UploadQueue.obj
 C:\Users\sethm\GEWEnergyGateway\src\utils\Logger.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Logger.obj

@@ -1,6 +1,7 @@
 #include "Gateway.h"
 
 #include "config/Configuration.h"
+#include "platform/windows/SerialPortWin.h"
 #include "utils/Logger.h"
 
 Gateway::Gateway()
@@ -31,5 +32,20 @@ bool Gateway::Initialize()
 
 void Gateway::Run()
 {
-    Logger::Info("Gateway Running...");
+    Configuration config;
+
+    if (!config.Load("gateway.json"))
+    {
+        Logger::Error("Configuration error.");
+        return;
+    }
+
+    SerialPortWin serial(config.Get().meter);
+
+    if (!serial.Open())
+        return;
+
+    Logger::Info("Serial communication ready.");
+
+    serial.Close();
 }

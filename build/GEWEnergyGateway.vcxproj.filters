@@ -31,10 +31,7 @@
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\platform\esp32\SerialESP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\platform\windows\HttpWin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\platform\windows\SerialWin.cpp">
+    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\platform\windows\SerialPortWin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\protocol\Modbus.cpp">
