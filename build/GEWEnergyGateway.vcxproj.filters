@@ -10,7 +10,7 @@
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\cloud\Uploader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\config\Config.cpp">
+    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\config\Configuration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\gateway\Gateway.cpp">

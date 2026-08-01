@@ -1,0 +1,33 @@
+{
+    "gateway":
+    {
+        "gatewayId":"GEW000001",
+        "firmware":"0.2.0",
+        "hardware":"WINDOWS_DEV"
+    },
+
+    "meter":
+    {
+        "manufacturer":"ABB",
+        "model":"M1M12",
+
+        "port":"COM3",
+
+        "baud":9600,
+
+        "parity":"E",
+
+        "stopBits":1,
+
+        "slaveId":1
+    },
+
+    "cloud":
+    {
+        "url":"https://yourdomain.com/api/upload.php",
+
+        "uploadInterval":2,
+
+        "apiKey":""
+    }
+}

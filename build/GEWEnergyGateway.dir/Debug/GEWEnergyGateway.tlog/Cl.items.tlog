@@ -1,7 +1,7 @@
 C:\Users\sethm\GEWEnergyGateway\main\main.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\main.obj
 C:\Users\sethm\GEWEnergyGateway\src\application\Application.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Application.obj
 C:\Users\sethm\GEWEnergyGateway\src\cloud\Uploader.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Uploader.obj
-C:\Users\sethm\GEWEnergyGateway\src\config\Config.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Config.obj
+C:\Users\sethm\GEWEnergyGateway\src\config\Configuration.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Configuration.obj
 C:\Users\sethm\GEWEnergyGateway\src\gateway\Gateway.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Gateway.obj
 C:\Users\sethm\GEWEnergyGateway\src\json\JsonBuilder.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\JsonBuilder.obj
 C:\Users\sethm\GEWEnergyGateway\src\meters\ABBM1M12.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\ABBM1M12.obj
