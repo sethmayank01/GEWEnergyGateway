@@ -3,11 +3,12 @@
 #include "config/Configuration.h"
 #include "platform/windows/SerialPortWin.h"
 #include "utils/Logger.h"
-#include "protocol/CRC16.h"
-#include "protocol/ModbusFrame.h"
-#include "protocol/ModbusException.h"
-#include "protocol/ModbusRTU.h"
 
+#include "protocol/ModbusRTU.h"
+#include "protocol/ModbusException.h"
+
+#include "devices/ABBM1M12.h"
+#include "models/MeterReading.h"
 
 Gateway::Gateway()
 {
@@ -28,9 +29,9 @@ bool Gateway::Initialize()
     const auto& cfg = config.Get();
 
     Logger::Info("Gateway ID : " + cfg.gateway.gatewayId);
-    Logger::Info("Meter : " + cfg.meter.manufacturer + " " + cfg.meter.model);
-    Logger::Info("COM Port : " + cfg.meter.port);
-    Logger::Info("Cloud : " + cfg.cloud.url);
+    Logger::Info("Meter      : " + cfg.meter.manufacturer + " " + cfg.meter.model);
+    Logger::Info("COM Port   : " + cfg.meter.port);
+    Logger::Info("Cloud URL  : " + cfg.cloud.url);
 
     return true;
 }
@@ -53,26 +54,30 @@ void Gateway::Run()
         return;
     }
 
-    
+   
     ModbusRTU modbus(serial);
 
-    std::vector<uint8_t> payload;
+    ABBM1M12 meter(
+        modbus,
+        static_cast<uint8_t>(config.Get().meter.slaveId));
 
-    ModbusException result =
-        modbus.ReadHoldingRegisters(
-            static_cast<uint8_t>(config.Get().meter.slaveId),
-            142,
-            2,
-            payload);
+    MeterReading reading;
 
-    if (result == ModbusException::None)
+    if (meter.Read(reading))
     {
-        Logger::Info("Modbus Read Successful.");
-        Logger::Hex("Payload:", payload);
+        Logger::Info("Meter Read Successful.");
+
+        Logger::Info("Voltage L1 : " +
+                     std::to_string(reading.voltageL1));
+
+        // Additional parameters will be added later
+        // Logger::Info("Current L1 : " + std::to_string(reading.currentL1));
+        // Logger::Info("Frequency  : " + std::to_string(reading.frequency));
+        // Logger::Info("Power      : " + std::to_string(reading.activePower));
     }
     else
     {
-        Logger::Error("Modbus Read Failed: " + ToString(result));
+        Logger::Error("Failed to read ABB M1M12.");
     }
 
     serial.Close();

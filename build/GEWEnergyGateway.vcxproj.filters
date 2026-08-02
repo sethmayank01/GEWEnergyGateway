@@ -13,13 +13,13 @@
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\config\Configuration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\devices\ABBM1M12.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\gateway\Gateway.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\json\JsonBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\meters\ABBM1M12.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\network\HttpClient.cpp">
@@ -44,6 +44,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\queue\UploadQueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\FloatDecoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\HexDump.cpp">

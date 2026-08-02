@@ -2,9 +2,9 @@ C:\Users\sethm\GEWEnergyGateway\main\main.cpp;C:\Users\sethm\GEWEnergyGateway\bu
 C:\Users\sethm\GEWEnergyGateway\src\application\Application.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Application.obj
 C:\Users\sethm\GEWEnergyGateway\src\cloud\Uploader.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Uploader.obj
 C:\Users\sethm\GEWEnergyGateway\src\config\Configuration.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Configuration.obj
+C:\Users\sethm\GEWEnergyGateway\src\devices\ABBM1M12.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\ABBM1M12.obj
 C:\Users\sethm\GEWEnergyGateway\src\gateway\Gateway.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Gateway.obj
 C:\Users\sethm\GEWEnergyGateway\src\json\JsonBuilder.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\JsonBuilder.obj
-C:\Users\sethm\GEWEnergyGateway\src\meters\ABBM1M12.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\ABBM1M12.obj
 C:\Users\sethm\GEWEnergyGateway\src\network\HttpClient.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\HttpClient.obj
 C:\Users\sethm\GEWEnergyGateway\src\platform\esp32\HttpESP.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\HttpESP.obj
 C:\Users\sethm\GEWEnergyGateway\src\platform\esp32\SerialESP.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\SerialESP.obj
@@ -13,5 +13,6 @@ C:\Users\sethm\GEWEnergyGateway\src\protocol\CRC16.cpp;C:\Users\sethm\GEWEnergyG
 C:\Users\sethm\GEWEnergyGateway\src\protocol\ModbusFrame.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\ModbusFrame.obj
 C:\Users\sethm\GEWEnergyGateway\src\protocol\ModbusRTU.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\ModbusRTU.obj
 C:\Users\sethm\GEWEnergyGateway\src\queue\UploadQueue.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\UploadQueue.obj
+C:\Users\sethm\GEWEnergyGateway\src\utils\FloatDecoder.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\FloatDecoder.obj
 C:\Users\sethm\GEWEnergyGateway\src\utils\HexDump.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\HexDump.obj
 C:\Users\sethm\GEWEnergyGateway\src\utils\Logger.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Logger.obj

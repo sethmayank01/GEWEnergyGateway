@@ -372,9 +372,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\application\Application.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\cloud\Uploader.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\config\Configuration.cpp" />
+    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\devices\ABBM1M12.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\gateway\Gateway.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\json\JsonBuilder.cpp" />
-    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\meters\ABBM1M12.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\network\HttpClient.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\platform\esp32\HttpESP.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\platform\esp32\SerialESP.cpp" />
@@ -383,6 +383,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\protocol\ModbusFrame.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\protocol\ModbusRTU.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\queue\UploadQueue.cpp" />
+    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\FloatDecoder.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\HexDump.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\Logger.cpp" />
   </ItemGroup>
