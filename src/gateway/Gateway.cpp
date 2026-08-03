@@ -9,6 +9,8 @@
 #include "protocol/ModbusRTU.h"
 #include "protocol/ModbusException.h"
 
+#include "cloud/HttpUploader.h"
+
 #include "devices/ABBM1M12.h"
 #include "models/MeterReading.h"
 
@@ -48,6 +50,8 @@ void Gateway::Run()
         Logger::Error("Configuration error.");
         return;
     }
+
+    HttpUploader uploader(config.Get().cloud.url);
 
     SerialPortWin serial(config.Get().meter);
 
@@ -179,8 +183,17 @@ Logger::Info("--------------------------------");
         JsonBuilder::Build(reading);
         Logger::Info("JSON Payload:");
 Logger::Info(json);
-
-   // uploader.Upload(json);
+        
+   if(uploader.Upload(json))
+{
+    Logger::Info(
+        "Cloud Upload Successful");
+}
+else
+{
+    Logger::Error(
+        "Cloud Upload Failed");
+}
     }
     else
     {
