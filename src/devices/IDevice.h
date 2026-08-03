@@ -2,11 +2,11 @@
 
 #include "../models/MeterReading.h"
 
-class IMeter
+class IDevice
 {
 public:
 
-    virtual ~IMeter() = default;
+    virtual ~IDevice() = default;
 
     virtual bool Read(MeterReading& reading)=0;
 };

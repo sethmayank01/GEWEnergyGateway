@@ -15,12 +15,12 @@ struct MeterReading
     float frequency = 0.0f;
 
     float activePower = 0.0f;
-
     float reactivePower = 0.0f;
-
     float apparentPower = 0.0f;
 
     float powerFactor = 0.0f;
+
+    double importEnergy = 0.0;
 
     uint64_t timestamp = 0;
 };

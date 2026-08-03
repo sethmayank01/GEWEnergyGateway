@@ -1,12 +1,12 @@
 #pragma once
 
-#include "IMeter.h"
+#include "IDevice.h"
 
 #include "../protocol/ModbusRTU.h"
 
 #include <cstdint>
 
-class ABBM1M12 : public IMeter
+class ABBM1M12 : public IDevice
 {
 public:
 

@@ -13,6 +13,7 @@ C:\Users\sethm\GEWEnergyGateway\src\protocol\CRC16.cpp;C:\Users\sethm\GEWEnergyG
 C:\Users\sethm\GEWEnergyGateway\src\protocol\ModbusFrame.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\ModbusFrame.obj
 C:\Users\sethm\GEWEnergyGateway\src\protocol\ModbusRTU.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\ModbusRTU.obj
 C:\Users\sethm\GEWEnergyGateway\src\queue\UploadQueue.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\UploadQueue.obj
+C:\Users\sethm\GEWEnergyGateway\src\utils\ByteBuffer.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\ByteBuffer.obj
 C:\Users\sethm\GEWEnergyGateway\src\utils\FloatDecoder.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\FloatDecoder.obj
 C:\Users\sethm\GEWEnergyGateway\src\utils\HexDump.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\HexDump.obj
 C:\Users\sethm\GEWEnergyGateway\src\utils\Logger.cpp;C:\Users\sethm\GEWEnergyGateway\build\GEWEnergyGateway.dir\Debug\Logger.obj
