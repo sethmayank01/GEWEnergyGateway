@@ -67,9 +67,11 @@ void Gateway::Run()
     {
         Logger::Info("Meter Read Successful.");
 
-        Logger::Info("Voltage L1 : " +
-                     std::to_string(reading.voltageL1));
-
+        Logger::Info("Voltage L1 : " + std::to_string(reading.voltageL1));
+        Logger::Info("Voltage L2 : " + std::to_string(reading.voltageL2));
+        Logger::Info("Voltage L3 : " + std::to_string(reading.voltageL3));
+               
+        
         // Additional parameters will be added later
         // Logger::Info("Current L1 : " + std::to_string(reading.currentL1));
         // Logger::Info("Frequency  : " + std::to_string(reading.frequency));

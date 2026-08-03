@@ -384,7 +384,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\protocol\ModbusRTU.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\queue\UploadQueue.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\ByteBuffer.cpp" />
-    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\FloatDecoder.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\HexDump.cpp" />
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\Logger.cpp" />
   </ItemGroup>

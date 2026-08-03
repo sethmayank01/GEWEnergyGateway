@@ -10,7 +10,6 @@ enum class FloatFormat
     WordSwapped,       // CDAB
     ReverseByteOrder   // DCBA
 };
-
 class ByteBuffer
 {
 public:
@@ -38,7 +37,7 @@ public:
 
     uint32_t ReadUInt32(
         size_t offset = 0) const;
-
+bool IsEmpty() const;
 private:
 
     std::vector<uint8_t> m_data;

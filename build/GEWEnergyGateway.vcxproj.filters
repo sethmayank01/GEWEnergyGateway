@@ -49,9 +49,6 @@
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\ByteBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\FloatDecoder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="C:\Users\sethm\GEWEnergyGateway\src\utils\HexDump.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

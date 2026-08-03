@@ -12,13 +12,25 @@ public:
 
     ABBM1M12(
         ModbusRTU& modbus,
-        uint8_t slaveId);
+        uint8_t slave);
 
-    bool Read(MeterReading& reading) override;
+    bool Read(
+        MeterReading& reading) override;
+
+private:
+
+    bool ReadVoltages(
+        MeterReading& reading);
+
+    bool ReadCurrents(
+        MeterReading& reading);
+
+    bool ReadFrequency(
+        MeterReading& reading);
 
 private:
 
     ModbusRTU& m_modbus;
 
-    uint8_t m_slaveId;
+    uint8_t m_slave;
 };

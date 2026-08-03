@@ -2,7 +2,8 @@
 
 #include "ABBRegisters.h"
 
-#include "../utils/FloatDecoder.h"
+
+#include "../utils/ByteBuffer.h"
 #include "../protocol/ModbusException.h"
 #include "../utils/Logger.h"
 
@@ -13,36 +14,71 @@ ABBM1M12::ABBM1M12(
     uint8_t slaveId)
     :
     m_modbus(modbus),
-    m_slaveId(slaveId)
+    m_slave(slaveId)
 {
 }
 
-bool ABBM1M12::Read(MeterReading& reading)
+bool ABBM1M12::Read(
+    MeterReading& reading)
+{
+    if(!ReadVoltages(reading))
+        return false;
+
+    if(!ReadCurrents(reading))
+        return false;
+
+    if(!ReadFrequency(reading))
+        return false;
+
+    return true;
+}
+
+bool ABBM1M12::ReadVoltages(MeterReading& reading)
 {
     std::vector<uint8_t> payload;
 
     ModbusException result =
         m_modbus.ReadHoldingRegisters(
-            m_slaveId,
-            ABBRegisters::VoltageL1,
-            2,
+            m_slave,
+            ABBRegisters::Voltage::L1,
+            6,              // 3 floats = 6 registers = 12 bytes
             payload);
 
     if (result != ModbusException::None)
     {
         Logger::Error(
-            "ABB Read Failed: " +ToString(result));
-           
+            "Voltage Read Failed: " +
+            ToString(result));
 
         return false;
     }
 
-   
+    ByteBuffer buffer(payload);
 
-        reading.voltageL1 =
-    FloatDecoder::Decode(
-        payload,
-        FloatFormat::BADC);
+    reading.voltageL1 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            0);
 
+    reading.voltageL2 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            4);
+
+    reading.voltageL3 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            8);
+
+    return true;
+}
+
+bool ABBM1M12::ReadCurrents(MeterReading& reading)
+{
+    return true;
+}
+
+bool ABBM1M12::ReadFrequency(MeterReading& reading)
+{
     return true;
 }

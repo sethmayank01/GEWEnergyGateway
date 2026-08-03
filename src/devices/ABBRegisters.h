@@ -4,25 +4,38 @@
 
 namespace ABBRegisters
 {
-    // Voltages
-    constexpr uint16_t VoltageL1 = 142;
-    constexpr uint16_t VoltageL2 = 144;
-    constexpr uint16_t VoltageL3 = 146;
+    namespace Voltage
+    {
+        constexpr uint16_t L1 = 142;
+        constexpr uint16_t L2 = 144;
+        constexpr uint16_t L3 = 146;
+    }
 
-    // Currents
-    constexpr uint16_t CurrentL1 = 154;
-    constexpr uint16_t CurrentL2 = 156;
-    constexpr uint16_t CurrentL3 = 158;
+    namespace Current
+    {
+        constexpr uint16_t L1 = 154;
+        constexpr uint16_t L2 = 156;
+        constexpr uint16_t L3 = 158;
+    }
 
-    // Frequency
-    constexpr uint16_t Frequency = 172;
+    namespace System
+    {
+        constexpr uint16_t Frequency = 172;
 
-    // Power
-    constexpr uint16_t ActivePower   = 100;
-    constexpr uint16_t ReactivePower = 108;
-    constexpr uint16_t ApparentPower = 116;
+        constexpr uint16_t PowerFactor = 124;
+    }
 
-    // Power Factor
-    constexpr uint16_t PowerFactor = 124;
+    namespace Power
+    {
+        constexpr uint16_t Active = 100;
 
+        constexpr uint16_t Reactive = 108;
+
+        constexpr uint16_t Apparent = 116;
+    }
+
+    namespace Energy
+    {
+        constexpr uint16_t Import = 200;
+    }
 }

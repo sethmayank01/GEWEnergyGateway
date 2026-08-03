@@ -109,3 +109,8 @@ uint32_t ByteBuffer::ReadUInt32(
         (static_cast<uint32_t>(m_data[offset + 2]) << 8) |
         (static_cast<uint32_t>(m_data[offset + 3]));
 }
+
+bool ByteBuffer::IsEmpty() const
+{
+    return m_data.empty();
+}
