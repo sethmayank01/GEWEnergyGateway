@@ -1,12 +1,17 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 struct MeterReading
 {
     //
     // Voltage - Line to Line
     //
+    std::string gatewayId = "GEW000001";
+    std::string device = "ABB_M1M12";
+    std::string firmware = "0.5.0-alpha4";
+    
     float voltageLLAverage = 0.0f;
     float voltageL12 = 0.0f;
     float voltageL23 = 0.0f;

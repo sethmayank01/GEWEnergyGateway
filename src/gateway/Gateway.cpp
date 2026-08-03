@@ -3,6 +3,8 @@
 #include "config/Configuration.h"
 #include "platform/windows/SerialPortWin.h"
 #include "utils/Logger.h"
+#include "utils/JsonBuilder.h"
+#include "utils/TimeUtils.h"
 
 #include "protocol/ModbusRTU.h"
 #include "protocol/ModbusException.h"
@@ -171,6 +173,14 @@ Logger::Info("--------------------------------");
         "Wh Received : " +
         std::to_string(reading.energyReceivedWh));
         
+         reading.timestamp =
+        TimeUtils::UnixTimestamp();
+         auto json =
+        JsonBuilder::Build(reading);
+        Logger::Info("JSON Payload:");
+Logger::Info(json);
+
+   // uploader.Upload(json);
     }
     else
     {
