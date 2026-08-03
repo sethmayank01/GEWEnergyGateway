@@ -19,15 +19,15 @@ public:
 
 private:
 
-    bool ReadVoltages(
+   bool ReadPowerBlock(
         MeterReading& reading);
 
-    bool ReadCurrents(
+    bool ReadVoltageBlock(
         MeterReading& reading);
 
-    bool ReadFrequency(
+    bool ReadCurrentBlock(
         MeterReading& reading);
-
+ 
 private:
 
     ModbusRTU& m_modbus;

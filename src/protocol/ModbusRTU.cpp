@@ -5,6 +5,8 @@
 #include "CRC16.h"
 
 #include "utils/Logger.h"
+#include <thread>
+#include <chrono>
 
 ModbusRTU::ModbusRTU(
         ISerialPort& serial)
@@ -31,7 +33,7 @@ ModbusRTU::ReadHoldingRegisters(
             address,
             registerCount);
 
-    
+              
     m_serial.Flush();
     Logger::Hex("MODBUS TX:", frame);
     if(!m_serial.Write(frame))
@@ -106,6 +108,10 @@ payload.assign(
     body.begin(),
     body.begin() + byteCount);
 
+ // ABB M1M12 requires inter-request delay.
+// Without this delay, consecutive Modbus transactions may timeout.
+std::this_thread::sleep_for(
+    std::chrono::milliseconds(500));
 return ModbusException::None;
     
 }

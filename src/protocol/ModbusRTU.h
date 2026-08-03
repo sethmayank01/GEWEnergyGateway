@@ -21,4 +21,5 @@ public:
 private:
 
     ISerialPort& m_serial;
+    uint32_t m_interFrameDelayMs = 500;
 };

@@ -21,28 +21,34 @@ ABBM1M12::ABBM1M12(
 bool ABBM1M12::Read(
     MeterReading& reading)
 {
-    if(!ReadVoltages(reading))
+    if(!ReadVoltageBlock(reading))
         return false;
 
-    if(!ReadCurrents(reading))
+   
+   if(!ReadCurrentBlock(reading))
         return false;
 
-    if(!ReadFrequency(reading))
+        if(!ReadPowerBlock(reading))
         return false;
+
+ 
 
     return true;
 }
 
-bool ABBM1M12::ReadVoltages(MeterReading& reading)
+bool ABBM1M12::ReadVoltageBlock(
+    MeterReading& reading)
 {
     std::vector<uint8_t> payload;
+
 
     ModbusException result =
         m_modbus.ReadHoldingRegisters(
             m_slave,
-            ABBRegisters::Voltage::L1,
-            6,              // 3 floats = 6 registers = 12 bytes
+            ABBRegisters::VoltageBlock::Start,
+            ABBRegisters::VoltageBlock::Count,
             payload);
+
 
     if (result != ModbusException::None)
     {
@@ -53,32 +59,240 @@ bool ABBM1M12::ReadVoltages(MeterReading& reading)
         return false;
     }
 
+
     ByteBuffer buffer(payload);
 
-    reading.voltageL1 =
+
+    reading.voltageLLAverage =
         buffer.ReadFloat(
             FloatFormat::ByteSwapped,
             0);
 
-    reading.voltageL2 =
+
+    reading.voltageL12 =
         buffer.ReadFloat(
             FloatFormat::ByteSwapped,
             4);
 
-    reading.voltageL3 =
+
+    reading.voltageL23 =
         buffer.ReadFloat(
             FloatFormat::ByteSwapped,
             8);
 
+
+    reading.voltageL31 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            12);
+
+
+    reading.voltageLNAverage =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            16);
+
+
+    reading.voltageL1 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            20);
+
+
+    reading.voltageL2 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            24);
+
+
+    reading.voltageL3 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            28);
+
     return true;
 }
 
-bool ABBM1M12::ReadCurrents(MeterReading& reading)
+bool ABBM1M12::ReadCurrentBlock(
+    MeterReading& reading)
 {
+    std::vector<uint8_t> payload;
+
+
+    ModbusException result =
+        m_modbus.ReadHoldingRegisters(
+            m_slave,
+            ABBRegisters::CurrentBlock::Start,
+            ABBRegisters::CurrentBlock::Count,
+            payload);
+
+
+    if (result != ModbusException::None)
+    {
+        Logger::Error(
+            "Current Block Read Failed: " +
+            ToString(result));
+
+        return false;
+    }
+
+
+    ByteBuffer buffer(payload);
+
+   reading.currentAverage =
+    buffer.ReadFloat(
+        FloatFormat::ByteSwapped,
+        0);
+
+
+reading.currentL1 =
+    buffer.ReadFloat(
+        FloatFormat::ByteSwapped,
+        4);
+
+
+reading.currentL2 =
+    buffer.ReadFloat(
+        FloatFormat::ByteSwapped,
+        8);
+
+
+reading.currentL3 =
+    buffer.ReadFloat(
+        FloatFormat::ByteSwapped,
+        12);
+
+
+reading.frequency =
+    buffer.ReadFloat(
+        FloatFormat::ByteSwapped,
+        16);
+
+reading.energyReceivedWh =
+    buffer.ReadFloat(
+        FloatFormat::ByteSwapped,
+        20);
+
     return true;
 }
 
-bool ABBM1M12::ReadFrequency(MeterReading& reading)
+bool ABBM1M12::ReadPowerBlock(
+    MeterReading& reading)
 {
+    std::vector<uint8_t> payload;
+
+
+    ModbusException result =
+        m_modbus.ReadHoldingRegisters(
+            m_slave,
+            ABBRegisters::PowerBlock::Start,
+            ABBRegisters::PowerBlock::Count,
+            payload);
+
+
+    if (result != ModbusException::None)
+    {
+        Logger::Error(
+            "Power Read Failed: " +
+            ToString(result));
+
+        return false;
+    }
+
+
+    ByteBuffer buffer(payload);
+
+
+    // Active Power
+    reading.activePower =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            0);
+
+    reading.activePowerL1 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            4);
+
+    reading.activePowerL2 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            8);
+
+    reading.activePowerL3 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            12);
+
+
+
+    // Reactive Power
+    reading.reactivePower =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            16);
+
+    reading.reactivePowerL1 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            20);
+
+    reading.reactivePowerL2 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            24);
+
+    reading.reactivePowerL3 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            28);
+
+
+
+    // Apparent Power
+    reading.apparentPower =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            32);
+
+    reading.apparentPowerL1 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            36);
+
+    reading.apparentPowerL2 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            40);
+
+    reading.apparentPowerL3 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            44);
+
+
+
+    // Power Factor
+    reading.powerFactorAverage =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            48);
+
+    reading.powerFactorL1 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            52);
+
+    reading.powerFactorL2 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            56);
+
+    reading.powerFactorL3 =
+        buffer.ReadFloat(
+            FloatFormat::ByteSwapped,
+            60);
+
+
     return true;
 }

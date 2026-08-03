@@ -1,0 +1,15 @@
+# Build folders
+build/
+build-tools/
+
+# Visual Studio
+.vs/
+*.obj
+*.pdb
+*.ilk
+*.tlog
+*.log
+
+# Executables
+*.exe
+*.dll

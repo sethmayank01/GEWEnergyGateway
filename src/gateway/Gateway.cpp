@@ -10,6 +10,7 @@
 #include "devices/ABBM1M12.h"
 #include "models/MeterReading.h"
 
+
 Gateway::Gateway()
 {
 }
@@ -65,17 +66,111 @@ void Gateway::Run()
 
     if (meter.Read(reading))
     {
-        Logger::Info("Meter Read Successful.");
+        Logger::Info("--------------------------------");
+Logger::Info("ABB M1M12 Measurement Snapshot");
+Logger::Info("--------------------------------");
+   
+    //
+    // Voltage
+    //
+    Logger::Info(
+        "Voltage L1 : " +
+        std::to_string(reading.voltageL1));
 
-        Logger::Info("Voltage L1 : " + std::to_string(reading.voltageL1));
-        Logger::Info("Voltage L2 : " + std::to_string(reading.voltageL2));
-        Logger::Info("Voltage L3 : " + std::to_string(reading.voltageL3));
-               
+    Logger::Info(
+        "Voltage L2 : " +
+        std::to_string(reading.voltageL2));
+
+    Logger::Info(
+        "Voltage L3 : " +
+        std::to_string(reading.voltageL3));
+
+
+    Logger::Info(
+        "Voltage L12 : " +
+        std::to_string(reading.voltageL12));
+
+    Logger::Info(
+        "Voltage L23 : " +
+        std::to_string(reading.voltageL23));
+
+    Logger::Info(
+        "Voltage L31 : " +
+        std::to_string(reading.voltageL31));
+
+
+    //
+    // Current
+    //
+    Logger::Info(
+        "Current L1 : " +
+        std::to_string(reading.currentL1));
+
+    Logger::Info(
+        "Current L2 : " +
+        std::to_string(reading.currentL2));
+
+    Logger::Info(
+        "Current L3 : " +
+        std::to_string(reading.currentL3));
+
+
+    Logger::Info(
+        "Current Average : " +
+        std::to_string(reading.currentAverage));
+
+
+    //
+    // System
+    //
+    Logger::Info(
+        "Frequency : " +
+        std::to_string(reading.frequency));
+
+
+    //
+    // Power
+    //
+    Logger::Info(
+        "Active Power : " +
+        std::to_string(reading.activePower));
+
+    Logger::Info(
+        "Reactive Power : " +
+        std::to_string(reading.reactivePower));
+
+    Logger::Info(
+        "Apparent Power : " +
+        std::to_string(reading.apparentPower));
+
+
+    //
+    // Power Factor
+    //
+    Logger::Info(
+        "Power Factor Average : " +
+        std::to_string(reading.powerFactorAverage));
+
+    Logger::Info(
+        "Power Factor L1 : " +
+        std::to_string(reading.powerFactorL1));
+
+    Logger::Info(
+        "Power Factor L2 : " +
+        std::to_string(reading.powerFactorL2));
+
+    Logger::Info(
+        "Power Factor L3 : " +
+        std::to_string(reading.powerFactorL3));
+
+
+    //
+    // Energy
+    //
+    Logger::Info(
+        "Wh Received : " +
+        std::to_string(reading.energyReceivedWh));
         
-        // Additional parameters will be added later
-        // Logger::Info("Current L1 : " + std::to_string(reading.currentL1));
-        // Logger::Info("Frequency  : " + std::to_string(reading.frequency));
-        // Logger::Info("Power      : " + std::to_string(reading.activePower));
     }
     else
     {
