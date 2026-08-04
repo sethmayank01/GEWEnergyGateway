@@ -9,6 +9,7 @@
 #include "protocol/ModbusRTU.h"
 
 #include "cloud/CloudSyncManager.h"
+#include "health/GatewayHealth.h"
 
 #include "devices/ABBM1M12.h"
 #include "models/MeterReading.h"
@@ -52,11 +53,13 @@ void Gateway::Run()
         Logger::Error("Configuration error.");
         return;
     }
-
-    CloudSyncManager cloud(config.Get().cloud.url);
+    GatewayHealth health;
+    CloudSyncManager cloud(
+    config.Get().cloud.url,
+    health);
 
     SerialPortWin serial(config.Get().meter);
-
+    
     if (!serial.Open())
     {
         Logger::Error("Cannot open COM port.");
@@ -75,6 +78,7 @@ void Gateway::Run()
 
         if (meter.Read(reading))
         {
+            health.MeterReadSuccess();
             Logger::Info("--------------------------------");
             Logger::Info("ABB M1M12 Measurement Snapshot");
             Logger::Info("--------------------------------");
@@ -194,9 +198,10 @@ void Gateway::Run()
         }
         else
         {
+            health.MeterReadFailure();
             Logger::Error("Failed to read meter.");
         }
-
+        health.PrintStatus();
         std::this_thread::sleep_for(
             std::chrono::seconds(
                 config.Get().cloud.uploadInterval));

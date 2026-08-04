@@ -6,9 +6,13 @@
 #include "../utils/Logger.h"
 
 CloudSyncManager::CloudSyncManager(
-    const std::string &url)
-    : m_uploader(url)
+    const std::string& url,
+    GatewayHealth& health)
+    : m_health(health),
+      m_uploader(url)
 {
+    m_health.SetPendingUploads(
+        m_queue.Count());
 }
 
 bool CloudSyncManager::Upload(
@@ -26,9 +30,11 @@ bool CloudSyncManager::Upload(
     {
         Logger::Info(
             "Cloud Upload Successful");
-
+        m_health.UploadSuccess();
         return true;
     }
+
+    m_health.UploadFailure();
 
     Logger::Error(
         "Cloud Upload Failed");
@@ -37,6 +43,9 @@ bool CloudSyncManager::Upload(
         json,
         reading.timestamp,
         reading.sequence);
+
+    m_health.SetPendingUploads(
+    m_queue.Count()); 
 
     Logger::Info(
         "Reading saved to upload queue.");
@@ -77,8 +86,10 @@ void CloudSyncManager::RetryPending()
         {
             Logger::Info(
                 "Queued upload successful.");
-
+            m_health.UploadSuccess();
             m_queue.Remove(file);
+            m_health.SetPendingUploads(
+    m_queue.Count());
         }
         else
         {
