@@ -29,9 +29,12 @@ std::string JsonBuilder::Build(
         << reading.firmware
     << "\","
 
+    << "\"sequence\":"
+    << reading.sequence
+    << ","
 
     << "\"timestamp\":"
-        << reading.timestamp
+    << reading.timestamp
     << ","
 
 

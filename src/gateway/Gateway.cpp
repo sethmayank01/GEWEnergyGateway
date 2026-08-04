@@ -14,6 +14,8 @@
 #include "devices/ABBM1M12.h"
 #include "models/MeterReading.h"
 
+#include <thread>
+#include <chrono>
 
 Gateway::Gateway()
 {
@@ -34,9 +36,11 @@ bool Gateway::Initialize()
     const auto& cfg = config.Get();
 
     Logger::Info("Gateway ID : " + cfg.gateway.gatewayId);
+    Logger::Info("Firmware   : " + cfg.gateway.firmware);
     Logger::Info("Meter      : " + cfg.meter.manufacturer + " " + cfg.meter.model);
     Logger::Info("COM Port   : " + cfg.meter.port);
     Logger::Info("Cloud URL  : " + cfg.cloud.url);
+    
 
     return true;
 }
@@ -63,16 +67,20 @@ void Gateway::Run()
 
    
     ModbusRTU modbus(serial);
-
+uint64_t sequence = 0;
     ABBM1M12 meter(
         modbus,
         static_cast<uint8_t>(config.Get().meter.slaveId));
 
+        while(true)
+{
     MeterReading reading;
+
+    
 
     if (meter.Read(reading))
     {
-        Logger::Info("--------------------------------");
+            Logger::Info("--------------------------------");
 Logger::Info("ABB M1M12 Measurement Snapshot");
 Logger::Info("--------------------------------");
    
@@ -177,6 +185,20 @@ Logger::Info("--------------------------------");
         "Wh Received : " +
         std::to_string(reading.energyReceivedWh));
         
+        reading.gatewayId =
+    config.Get().gateway.gatewayId;
+
+reading.device =
+    config.Get().meter.manufacturer +
+    "_" +
+    config.Get().meter.model;
+
+reading.firmware =
+    config.Get().gateway.firmware;
+
+        reading.sequence =
+            ++sequence;
+
          reading.timestamp =
         TimeUtils::UnixTimestamp();
          auto json =
@@ -199,7 +221,15 @@ else
     {
         Logger::Error("Failed to read ABB M1M12.");
     }
+ Logger::Info(
+        "Waiting for next cycle...");
 
+
+    std::this_thread::sleep_for(
+        std::chrono::seconds(
+            config.Get().cloud.uploadInterval));
+
+}
     serial.Close();
 
     Logger::Info("Serial Port Closed.");

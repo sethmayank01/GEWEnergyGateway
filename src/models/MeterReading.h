@@ -8,9 +8,9 @@ struct MeterReading
     //
     // Voltage - Line to Line
     //
-    std::string gatewayId = "GEW000001";
-    std::string device = "ABB_M1M12";
-    std::string firmware = "0.5.0-alpha4";
+    std::string gatewayId = "";
+    std::string device = "";
+    std::string firmware = "";
     
     float voltageLLAverage = 0.0f;
     float voltageL12 = 0.0f;
@@ -97,4 +97,5 @@ struct MeterReading
     // Gateway timestamp
     //
     uint64_t timestamp = 0;
+    uint64_t sequence = 0;
 };
