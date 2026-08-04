@@ -9,6 +9,7 @@ struct MeterReading
     // Voltage - Line to Line
     //
     std::string gatewayId = "";
+    std::string apiKey = "";
     std::string device = "";
     std::string firmware = "";
     

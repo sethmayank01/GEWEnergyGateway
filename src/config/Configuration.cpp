@@ -22,6 +22,9 @@ bool Configuration::Load(const std::string& filename)
     m_config.gateway.gatewayId =
         gateway.value("gatewayId","");
 
+        m_config.gateway.apiKey =
+        gateway.value("apiKey","");
+
     m_config.gateway.firmware =
         gateway.value("firmware","");
 
@@ -73,6 +76,7 @@ bool Configuration::Validate() const
     if(m_config.gateway.gatewayId.empty())
         return false;
 
+    
     if(m_config.meter.port.empty())
         return false;
 

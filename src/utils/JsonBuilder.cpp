@@ -19,6 +19,9 @@ std::string JsonBuilder::Build(
         << reading.gatewayId
     << "\","
 
+     << "\"apiKey\":\""
+        << reading.apiKey
+    << "\","
 
     << "\"device\":\""
         << reading.device

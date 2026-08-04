@@ -36,6 +36,7 @@ bool Gateway::Initialize()
     const auto &cfg = config.Get();
 
     Logger::Info("Gateway ID : " + cfg.gateway.gatewayId);
+    Logger::Info("API Key    : " + cfg.gateway.apiKey);
     Logger::Info("Firmware   : " + cfg.gateway.firmware);
     Logger::Info("Meter      : " + cfg.meter.manufacturer + " " + cfg.meter.model);
     Logger::Info("COM Port   : " + cfg.meter.port);
@@ -194,7 +195,8 @@ void Gateway::Run()
                 config.Get().meter.manufacturer +
                 "_" +
                 config.Get().meter.model;
-
+            reading.apiKey =
+                config.Get().gateway.apiKey;
             reading.firmware =
                 config.Get().gateway.firmware;
 

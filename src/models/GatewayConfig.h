@@ -7,6 +7,7 @@ struct GatewayConfig
     struct Gateway
     {
         std::string gatewayId;
+        std::string apiKey;
         std::string firmware;
         std::string hardware;
     } gateway;

@@ -3,6 +3,7 @@
     {
         "gatewayId":"GEW000001",
         "firmware":"0.5.0-alpha6",
+        "apiKey": "GEW-A8F92KX7P",
         "hardware":"WINDOWS_DEV"
     },
 
