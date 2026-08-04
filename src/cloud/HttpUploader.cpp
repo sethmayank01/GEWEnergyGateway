@@ -4,18 +4,63 @@
 
 #include <windows.h>
 #include <winhttp.h>
+#include <vector>
 
 #pragma comment(lib, "winhttp.lib")
 
-
 HttpUploader::HttpUploader(
     const std::string& url)
-    :
-    m_url(url)
+    : m_url(url)
 {
+    std::wstring wurl(url.begin(), url.end());
 
+    URL_COMPONENTS uc = {};
+
+    uc.dwStructSize = sizeof(URL_COMPONENTS);
+
+    uc.dwHostNameLength = static_cast<DWORD>(-1);
+    uc.dwUrlPathLength = static_cast<DWORD>(-1);
+    uc.dwExtraInfoLength = static_cast<DWORD>(-1);
+
+    if (!WinHttpCrackUrl(
+            wurl.c_str(),
+            0,
+            0,
+            &uc))
+    {
+        Logger::Error("Invalid cloud URL.");
+
+        return;
+    }
+
+    m_host.assign(
+        uc.lpszHostName,
+        uc.dwHostNameLength);
+
+    m_path.assign(
+        uc.lpszUrlPath,
+        uc.dwUrlPathLength);
+
+    if (uc.dwExtraInfoLength > 0)
+    {
+        m_path.append(
+            uc.lpszExtraInfo,
+            uc.dwExtraInfoLength);
+    }
+
+    m_port = uc.nPort;
+
+    m_secure =
+        (uc.nScheme == INTERNET_SCHEME_HTTPS);
+
+  /*  Logger::Info(
+        "HTTP Host : " +
+        std::string(m_host.begin(), m_host.end()));
+
+    Logger::Info(
+        "HTTP Path : " +
+        std::string(m_path.begin(), m_path.end()));*/
 }
-
 
 
 bool HttpUploader::Upload(
@@ -41,11 +86,11 @@ bool HttpUploader::Upload(
 
 
     HINTERNET connect =
-        WinHttpConnect(
-            session,
-            L"www.geworks.co.in",
-            INTERNET_DEFAULT_HTTPS_PORT,
-            0);
+  WinHttpConnect(
+    session,
+    m_host.c_str(),
+    m_port,
+    0);
 
 
 
@@ -58,14 +103,14 @@ bool HttpUploader::Upload(
 
 
     HINTERNET request =
-        WinHttpOpenRequest(
-            connect,
-            L"POST",
-            L"/energy/api/upload.php",
+WinHttpOpenRequest(
+    connect,
+    L"POST",
+    m_path.c_str(),
             NULL,
             WINHTTP_NO_REFERER,
             WINHTTP_DEFAULT_ACCEPT_TYPES,
-            WINHTTP_FLAG_SECURE);
+            m_secure ? WINHTTP_FLAG_SECURE : 0);
 
 
 

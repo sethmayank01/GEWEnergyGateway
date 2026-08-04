@@ -24,7 +24,7 @@
 
     "cloud":
     {
-        "url":"https://www.geworks.co.in/energy/api/upload.php",
+        "url":"https://www.geworks.co.in/energy/api/upload_invalid.php",
 
         "uploadInterval":10,
 

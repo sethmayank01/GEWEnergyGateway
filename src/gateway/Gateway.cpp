@@ -10,6 +10,7 @@
 #include "protocol/ModbusException.h"
 
 #include "cloud/HttpUploader.h"
+#include "queue/UploadQueue.h"
 
 #include "devices/ABBM1M12.h"
 #include "models/MeterReading.h"
@@ -56,6 +57,8 @@ void Gateway::Run()
     }
 
     HttpUploader uploader(config.Get().cloud.url);
+
+    UploadQueue queue;
 
     SerialPortWin serial(config.Get().meter);
 
@@ -206,7 +209,7 @@ reading.firmware =
         Logger::Info("JSON Payload:");
 Logger::Info(json);
         
-   if(uploader.Upload(json))
+   if (uploader.Upload(json))
 {
     Logger::Info(
         "Cloud Upload Successful");
@@ -215,6 +218,20 @@ else
 {
     Logger::Error(
         "Cloud Upload Failed");
+
+    if (queue.Save(
+            json,
+            reading.timestamp,
+            reading.sequence))
+    {
+        Logger::Info(
+            "Reading saved to upload queue.");
+    }
+    else
+    {
+        Logger::Error(
+            "Failed to save reading to queue.");
+    }
 }
     }
     else
