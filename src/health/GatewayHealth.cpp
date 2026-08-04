@@ -12,6 +12,7 @@ void GatewayHealth::MeterReadSuccess()
     m_lastReadTimestamp =
         TimeUtils::UnixTimestamp();
     m_lastError.clear();
+    m_consecutiveMeterFailures = 0;
 }
 
 void GatewayHealth::MeterReadFailure()
@@ -20,8 +21,15 @@ void GatewayHealth::MeterReadFailure()
 
     ++m_failedReads;
 
+     m_consecutiveMeterFailures++;
+
     m_lastError =
         "Meter Read Failed";
+}
+
+uint32_t GatewayHealth::GetConsecutiveMeterFailures() const
+{
+    return m_consecutiveMeterFailures;
 }
 
 void GatewayHealth::UploadSuccess()

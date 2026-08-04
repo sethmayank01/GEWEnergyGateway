@@ -25,6 +25,7 @@ bool Gateway::Initialize()
 {
     Logger::Info("Loading configuration...");
 
+   
     Configuration config;
 
     if (!config.Load("gateway.json"))
@@ -68,6 +69,7 @@ void Gateway::Run()
 
     ModbusRTU modbus(serial);
     GatewayState state;
+ uint32_t meterFailureLimit = 3;
 
 state.Load(
     "data/gateway_state.json");
@@ -209,7 +211,17 @@ state.SetGatewayId(
         {
             health.MeterReadFailure();
             Logger::Error("Failed to read meter.");
+            Logger::Error(
+        "Consecutive failures: "
+        +
+        std::to_string(
+            health.GetConsecutiveMeterFailures()));
         }
+         if(health.GetConsecutiveMeterFailures() >= meterFailureLimit)
+    {
+        Logger::Error(
+            "Meter communication lost.");
+    }
         health.PrintStatus();
         std::this_thread::sleep_for(
             std::chrono::seconds(
