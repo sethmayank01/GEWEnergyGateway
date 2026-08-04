@@ -97,6 +97,9 @@ bool Configuration::Validate() const
 
     if(m_config.cloud.uploadInterval<=0)
         return false;
+    
+    if(m_config.cloud.url.empty())
+        return false;
 
     return true;
 }

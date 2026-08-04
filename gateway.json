@@ -2,7 +2,7 @@
     "gateway":
     {
         "gatewayId":"GEW000001",
-        "firmware":"0.2.0",
+        "firmware":"0.5.0-alpha6",
         "hardware":"WINDOWS_DEV"
     },
 
@@ -24,9 +24,9 @@
 
     "cloud":
     {
-        "url":"https://yourdomain.com/api/upload.php",
+        "url":"https://www.geworks.co.in/energy/api/upload.php",
 
-        "uploadInterval":2,
+        "uploadInterval":60,
 
         "apiKey":""
     }
