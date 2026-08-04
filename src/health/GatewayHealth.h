@@ -22,7 +22,7 @@ public:
     void SetPendingUploads(
         size_t count);
 
-
+    void ResetMeterFailureState();
     uint32_t GetConsecutiveMeterFailures() const;
 
 

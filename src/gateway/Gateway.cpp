@@ -25,7 +25,6 @@ bool Gateway::Initialize()
 {
     Logger::Info("Loading configuration...");
 
-   
     Configuration config;
 
     if (!config.Load("gateway.json"))
@@ -47,6 +46,10 @@ bool Gateway::Initialize()
 
 void Gateway::Run()
 {
+    // Mayank ToDo
+    const uint32_t meterFailureLimit = 3;
+    const uint32_t recoveryDelaySeconds = 5;
+
     Configuration config;
 
     if (!config.Load("gateway.json"))
@@ -56,11 +59,11 @@ void Gateway::Run()
     }
     GatewayHealth health;
     CloudSyncManager cloud(
-    config.Get().cloud.url,
-    health);
+        config.Get().cloud.url,
+        health);
 
     SerialPortWin serial(config.Get().meter);
-    
+
     if (!serial.Open())
     {
         Logger::Error("Cannot open COM port.");
@@ -69,13 +72,12 @@ void Gateway::Run()
 
     ModbusRTU modbus(serial);
     GatewayState state;
- uint32_t meterFailureLimit = 3;
 
-state.Load(
-    "data/gateway_state.json");
+    state.Load(
+        "data/gateway_state.json");
 
-state.SetGatewayId(
-    config.Get().gateway.gatewayId);
+    state.SetGatewayId(
+        config.Get().gateway.gatewayId);
     ABBM1M12 meter(
         modbus,
         static_cast<uint8_t>(config.Get().meter.slaveId));
@@ -197,10 +199,10 @@ state.SetGatewayId(
                 config.Get().gateway.firmware;
 
             reading.sequence =
-    state.NextSequence();
+                state.NextSequence();
 
-    state.Save(
-    "data/gateway_state.json");
+            state.Save(
+                "data/gateway_state.json");
 
             reading.timestamp =
                 TimeUtils::UnixTimestamp();
@@ -212,16 +214,36 @@ state.SetGatewayId(
             health.MeterReadFailure();
             Logger::Error("Failed to read meter.");
             Logger::Error(
-        "Consecutive failures: "
-        +
-        std::to_string(
-            health.GetConsecutiveMeterFailures()));
+                "Consecutive failures: " +
+                std::to_string(
+                    health.GetConsecutiveMeterFailures()));
         }
-         if(health.GetConsecutiveMeterFailures() >= meterFailureLimit)
-    {
-        Logger::Error(
-            "Meter communication lost.");
-    }
+        if (health.GetConsecutiveMeterFailures() >= meterFailureLimit)
+        {
+            Logger::Error(
+                "Meter communication lost.");
+            Logger::Info(
+                "Attempting serial recovery...");
+
+            serial.Close();
+            Logger::Info(
+                "Serial port closed.");
+
+            std::this_thread::sleep_for(
+                std::chrono::seconds(
+                    recoveryDelaySeconds));
+            if (serial.Open())
+            {
+                Logger::Info(
+                    "Serial port recovered.");
+                    health.ResetMeterFailureState();
+            }
+            else
+            {
+                Logger::Error(
+                    "Serial recovery failed.");
+            }
+        }
         health.PrintStatus();
         std::this_thread::sleep_for(
             std::chrono::seconds(

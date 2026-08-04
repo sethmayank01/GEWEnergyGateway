@@ -32,6 +32,11 @@ uint32_t GatewayHealth::GetConsecutiveMeterFailures() const
     return m_consecutiveMeterFailures;
 }
 
+void GatewayHealth::ResetMeterFailureState()
+{
+    m_consecutiveMeterFailures = 0;
+}
+
 void GatewayHealth::UploadSuccess()
 {
     m_cloudConnected = true;
