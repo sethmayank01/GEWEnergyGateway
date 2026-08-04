@@ -10,7 +10,7 @@
 
 #include "cloud/CloudSyncManager.h"
 #include "health/GatewayHealth.h"
-
+#include "health/GatewayState.h"
 #include "devices/ABBM1M12.h"
 #include "models/MeterReading.h"
 
@@ -67,7 +67,13 @@ void Gateway::Run()
     }
 
     ModbusRTU modbus(serial);
-    uint64_t sequence = 0;
+    GatewayState state;
+
+state.Load(
+    "data/gateway_state.json");
+
+state.SetGatewayId(
+    config.Get().gateway.gatewayId);
     ABBM1M12 meter(
         modbus,
         static_cast<uint8_t>(config.Get().meter.slaveId));
@@ -189,7 +195,10 @@ void Gateway::Run()
                 config.Get().gateway.firmware;
 
             reading.sequence =
-                ++sequence;
+    state.NextSequence();
+
+    state.Save(
+    "data/gateway_state.json");
 
             reading.timestamp =
                 TimeUtils::UnixTimestamp();
