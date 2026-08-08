@@ -27,8 +27,8 @@
     {
         "url":"https://www.geworks.co.in/energy/api/upload.php",
 
-        "uploadInterval":10,
+        "uploadInterval":10
 
-        "apiKey":""
+        
     }
 }

@@ -178,7 +178,40 @@ WinHttpOpenRequest(
         "HTTP Status: "
         + std::to_string(status));
 
+std::string responseBody;
 
+DWORD bytesAvailable = 0;
+
+while (WinHttpQueryDataAvailable(
+           request,
+           &bytesAvailable)
+       && bytesAvailable > 0)
+{
+    std::vector<char> buffer(bytesAvailable);
+
+    DWORD bytesRead = 0;
+
+    if (WinHttpReadData(
+            request,
+            buffer.data(),
+            bytesAvailable,
+            &bytesRead))
+    {
+        responseBody.append(
+            buffer.data(),
+            bytesRead);
+    }
+}
+
+
+if (!responseBody.empty())
+{
+    Logger::Info(
+        "Server Response:");
+
+    Logger::Info(
+        responseBody);
+}
 
     WinHttpCloseHandle(request);
     WinHttpCloseHandle(connect);
