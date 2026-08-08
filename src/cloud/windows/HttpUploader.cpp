@@ -1,6 +1,6 @@
-#include "HttpUploader.h"
+#include "../HttpUploader.h"
 
-#include "../utils/Logger.h"
+#include "../../utils/Logger.h"
 
 #include <windows.h>
 #include <winhttp.h>

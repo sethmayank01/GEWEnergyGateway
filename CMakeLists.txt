@@ -19,18 +19,29 @@ else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
+add_compile_definitions(PLATFORM_WINDOWS)
+
 include_directories(
     ${PROJECT_SOURCE_DIR}/src
 )
 
-file(GLOB_RECURSE SOURCES
-    main/*.cpp
+#
+# Common Sources
+#
+file(GLOB_RECURSE COMMON_SOURCES
     src/*.cpp
 )
 
+#
+# Remove ESP32-specific files
+#
+list(FILTER COMMON_SOURCES EXCLUDE REGEX ".*/platform/esp32/.*")
+list(FILTER COMMON_SOURCES EXCLUDE REGEX ".*/cloud/esp32/.*")
+
 add_executable(
     ${PROJECT_NAME}
-    ${SOURCES}
+    ${APP_ENTRY}
+    ${COMMON_SOURCES}
 )
 
 message(STATUS "")

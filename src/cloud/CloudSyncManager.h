@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../models/MeterReading.h"
-#include "HttpUploader.h"
+#include "ICloudUploader.h"
 #include "../queue/UploadQueue.h"
 #include "../health/GatewayHealth.h"
 #include <string>
@@ -10,8 +10,8 @@ class CloudSyncManager
 {
 public:
 
-     CloudSyncManager(
-        const std::string& url,
+      CloudSyncManager(
+        ICloudUploader& uploader,
         GatewayHealth& health);
 
     bool Upload(
@@ -21,6 +21,6 @@ private:
 
     void RetryPending();
     GatewayHealth& m_health;
-    HttpUploader m_uploader;
+    ICloudUploader& m_uploader;
     UploadQueue m_queue;
 };

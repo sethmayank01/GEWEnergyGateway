@@ -19,6 +19,12 @@ build-tools/
 *.tlog
 *.log
 
+# PlatformIO
+.pio/
+
+# VSCode
+.vscode/
+
 # Executables
 *.exe
 *.dll

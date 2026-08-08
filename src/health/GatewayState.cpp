@@ -5,13 +5,20 @@
 #include "../../thirdparty/nlohmann/json.hpp"
 
 #include <fstream>
+#ifdef PLATFORM_ESP32
+#include <LittleFS.h>
+#else
 #include <filesystem>
+namespace fs = std::filesystem;
+#endif
+
 
 
 using json = nlohmann::json;
 
+#ifndef PLATFORM_ESP32
 namespace fs = std::filesystem;
-
+#endif
 
 
 bool GatewayState::Load(
@@ -81,7 +88,7 @@ bool GatewayState::Save(
 
     try
     {
-
+#ifndef PLATFORM_ESP32
         fs::path path(filename);
 
 
@@ -91,7 +98,7 @@ bool GatewayState::Save(
                 path.parent_path());
         }
 
-
+#endif
 
         json j;
 

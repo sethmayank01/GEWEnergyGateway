@@ -110,8 +110,12 @@ payload.assign(
 
  // ABB M1M12 requires inter-request delay.
 // Without this delay, consecutive Modbus transactions may timeout.
+#ifdef PLATFORM_ESP32
+// Mayank delay(500);
+#else
 std::this_thread::sleep_for(
     std::chrono::milliseconds(500));
+#endif
 return ModbusException::None;
     
 }

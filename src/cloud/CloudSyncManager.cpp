@@ -1,15 +1,15 @@
 #include "CloudSyncManager.h"
 
-#include "HttpUploader.h"
+
 
 #include "../utils/JsonBuilder.h"
 #include "../utils/Logger.h"
 
 CloudSyncManager::CloudSyncManager(
-    const std::string& url,
+    ICloudUploader& uploader,
     GatewayHealth& health)
-    : m_health(health),
-      m_uploader(url)
+    : m_uploader(uploader),
+      m_health(health)
 {
     m_health.SetPendingUploads(
         m_queue.Count());

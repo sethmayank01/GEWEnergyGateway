@@ -1,3 +1,49 @@
+#ifdef PLATFORM_ESP32
+
+#include "UploadQueue.h"
+
+UploadQueue::UploadQueue()
+{
+}
+
+bool UploadQueue::Save(
+    const std::string&,
+    uint64_t,
+    uint64_t)
+{
+    return false;
+}
+
+bool UploadQueue::HasPending() const
+{
+    return false;
+}
+
+size_t UploadQueue::Count() const
+{
+    return 0;
+}
+
+std::string UploadQueue::GetOldestFile() const
+{
+    return "";
+}
+
+std::string UploadQueue::Load(
+    const std::string& filename) const
+{
+    (void)filename;
+    return "";
+}
+
+bool UploadQueue::Remove(
+    const std::string&)
+{
+    return true;
+}
+
+#else
+
 #include "UploadQueue.h"
 
 #include "../utils/Logger.h"
@@ -124,3 +170,4 @@ bool UploadQueue::Save(
 
     return true;
 }
+#endif

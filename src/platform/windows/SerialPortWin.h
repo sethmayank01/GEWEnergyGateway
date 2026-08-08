@@ -3,8 +3,8 @@
 #include "../../hal/ISerialPort.h"
 #include "../../models/GatewayConfig.h"
 
-#include <Windows.h>
 
+#include <Windows.h>
 class SerialPortWin : public ISerialPort
 {
 public:

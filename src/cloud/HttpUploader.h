@@ -12,7 +12,7 @@ class HttpUploader :
 
 public:
 
-    HttpUploader(
+    explicit HttpUploader(
         const std::string& url);
 
 
@@ -23,11 +23,12 @@ public:
 private:
 
     std::string m_url;
-     std::wstring m_host;
+
+#ifdef PLATFORM_WINDOWS
+    std::wstring m_host;
     std::wstring m_path;
-
     uint16_t m_port = 443;
-
     bool m_secure = true;
+#endif
 
 };

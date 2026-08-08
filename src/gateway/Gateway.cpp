@@ -1,7 +1,6 @@
 #include "Gateway.h"
 
 #include "config/Configuration.h"
-#include "platform/windows/SerialPortWin.h"
 
 #include "utils/Logger.h"
 #include "utils/TimeUtils.h"
@@ -13,9 +12,16 @@
 #include "health/GatewayState.h"
 #include "devices/ABBM1M12.h"
 #include "models/MeterReading.h"
+#include "cloud/HttpUploader.h"
 
 #include <chrono>
 #include <thread>
+
+#ifdef PLATFORM_ESP32
+#include "platform/esp32/SerialPortESP32.h"
+#else
+#include "platform/windows/SerialPortWin.h"
+#endif
 
 Gateway::Gateway()
 {
@@ -59,11 +65,19 @@ void Gateway::Run()
         return;
     }
     GatewayHealth health;
-    CloudSyncManager cloud(
-        config.Get().cloud.url,
-        health);
 
+HttpUploader uploader(
+    config.Get().cloud.url);
+
+CloudSyncManager cloud(
+    uploader,
+    health);
+
+   #ifdef PLATFORM_ESP32
+    SerialPortESP32 serial(config.Get().meter);
+#else
     SerialPortWin serial(config.Get().meter);
+#endif
 
     if (!serial.Open())
     {
