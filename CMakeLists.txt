@@ -37,6 +37,7 @@ file(GLOB_RECURSE COMMON_SOURCES
 #
 list(FILTER COMMON_SOURCES EXCLUDE REGEX ".*/platform/esp32/.*")
 list(FILTER COMMON_SOURCES EXCLUDE REGEX ".*/cloud/esp32/.*")
+list(FILTER COMMON_SOURCES EXCLUDE REGEX ".*/network/esp32/.*")
 
 add_executable(
     ${PROJECT_NAME}
