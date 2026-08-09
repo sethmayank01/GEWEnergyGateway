@@ -221,3 +221,7 @@ if (!responseBody.empty())
 
     return status == 200;
 }
+
+HttpUploader::~HttpUploader()
+{
+}

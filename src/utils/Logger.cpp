@@ -1,43 +1,250 @@
 #include "Logger.h"
 #include "HexDump.h"
+#include "TimeUtils.h"
 
 #ifdef PLATFORM_WINDOWS
 
 #include <iostream>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 #else
 
 #include <Arduino.h>
+#include <LittleFS.h>
 
 #endif
 
 namespace
 {
-    void WriteLog(
-        const char* level,
-        const std::string& message)
-    {
-#ifdef PLATFORM_WINDOWS
+    constexpr size_t MAX_LOG_SIZE = 500 * 1024;
 
-        std::cout
-            << "["
-            << level
-            << "] "
-            << message
-            << std::endl;
+#ifdef PLATFORM_ESP32
+
+    constexpr const char* LOG_FOLDER   = "/logs";
+    constexpr const char* CURRENT_LOG  = "/logs/current.log";
+    constexpr const char* PREVIOUS_LOG = "/logs/previous.log";
 
 #else
 
-        Serial.print("[");
-
-        Serial.print(level);
-
-        Serial.print("] ");
-
-        Serial.println(message.c_str());
+    constexpr const char* LOG_FOLDER   = "logs";
+    constexpr const char* CURRENT_LOG  = "logs/current.log";
+    constexpr const char* PREVIOUS_LOG = "logs/previous.log";
 
 #endif
+
+    constexpr uint32_t FLUSH_INTERVAL = 20;
+    constexpr uint32_t ROTATE_INTERVAL = 100;
+}
+
+bool Logger::m_initialized = false;
+uint32_t Logger::m_logCounter = 0;
+
+#ifdef PLATFORM_ESP32
+File Logger::m_logFile;
+#else
+std::ofstream Logger::m_logFile;
+#endif
+
+bool Logger::Initialize()
+{
+    if (m_initialized)
+        return true;
+
+#ifdef PLATFORM_WINDOWS
+
+    fs::create_directories(LOG_FOLDER);
+
+    if (fs::exists(CURRENT_LOG))
+    {
+        if (fs::file_size(CURRENT_LOG) >= MAX_LOG_SIZE)
+        {
+            if (fs::exists(PREVIOUS_LOG))
+                fs::remove(PREVIOUS_LOG);
+
+            fs::rename(CURRENT_LOG, PREVIOUS_LOG);
+        }
     }
+
+    m_logFile.open(
+        CURRENT_LOG,
+        std::ios::app);
+
+    if (!m_logFile.is_open())
+        return false;
+
+#else
+
+    if (!LittleFS.exists(LOG_FOLDER))
+        LittleFS.mkdir(LOG_FOLDER);
+
+    if (LittleFS.exists(CURRENT_LOG))
+    {
+        File file =
+            LittleFS.open(
+                CURRENT_LOG,
+                FILE_READ);
+
+        if (file)
+        {
+            if (file.size() >= MAX_LOG_SIZE)
+            {
+                file.close();
+
+                LittleFS.remove(PREVIOUS_LOG);
+                LittleFS.rename(
+                    CURRENT_LOG,
+                    PREVIOUS_LOG);
+            }
+            else
+            {
+                file.close();
+            }
+        }
+    }
+
+    m_logFile =
+        LittleFS.open(
+            CURRENT_LOG,
+            FILE_APPEND);
+
+    if (!m_logFile)
+        return false;
+
+#endif
+
+    m_initialized = true;
+
+    return true;
+}
+
+void Logger::Shutdown()
+{
+    if (!m_initialized)
+        return;
+
+#ifdef PLATFORM_WINDOWS
+
+    m_logFile.close();
+
+#else
+
+    m_logFile.close();
+
+#endif
+
+    m_initialized = false;
+}
+
+void Logger::RotateIfRequired()
+{
+    if (m_logCounter % ROTATE_INTERVAL != 0)
+        return;
+
+#ifdef PLATFORM_WINDOWS
+
+    m_logFile.flush();
+    m_logFile.close();
+
+    if (fs::file_size(CURRENT_LOG) >= MAX_LOG_SIZE)
+    {
+        if (fs::exists(PREVIOUS_LOG))
+            fs::remove(PREVIOUS_LOG);
+
+        fs::rename(
+            CURRENT_LOG,
+            PREVIOUS_LOG);
+    }
+
+    m_logFile.open(
+        CURRENT_LOG,
+        std::ios::app);
+
+#else
+
+    m_logFile.flush();
+    m_logFile.close();
+
+    File file =
+        LittleFS.open(
+            CURRENT_LOG,
+            FILE_READ);
+
+    if (file)
+    {
+        if (file.size() >= MAX_LOG_SIZE)
+        {
+            file.close();
+
+            LittleFS.remove(PREVIOUS_LOG);
+
+            LittleFS.rename(
+                CURRENT_LOG,
+                PREVIOUS_LOG);
+        }
+        else
+        {
+            file.close();
+        }
+    }
+
+    m_logFile =
+        LittleFS.open(
+            CURRENT_LOG,
+            FILE_APPEND);
+
+#endif
+}
+
+void Logger::WriteLog(
+    const char* level,
+    const std::string& message)
+{
+    std::string line =
+        std::to_string(
+            TimeUtils::UnixTimestamp()) +
+        " [" +
+        level +
+        "] " +
+        message;
+
+#ifdef PLATFORM_WINDOWS
+
+    std::cout
+        << line
+        << std::endl;
+
+#else
+
+    Serial.println(
+        line.c_str());
+
+#endif
+
+    if (!m_initialized)
+        return;
+
+#ifdef PLATFORM_WINDOWS
+
+    m_logFile
+        << line
+        << std::endl;
+
+    if ((++m_logCounter % FLUSH_INTERVAL) == 0)
+        m_logFile.flush();
+
+#else
+
+    m_logFile.println(
+        line.c_str());
+
+    if ((++m_logCounter % FLUSH_INTERVAL) == 0)
+        m_logFile.flush();
+
+#endif
+
+    RotateIfRequired();
 }
 
 void Logger::Info(
@@ -70,5 +277,7 @@ void Logger::Hex(
 {
     WriteLog(
         "HEX",
-        prefix + " " + HexDump::ToString(data));
+        prefix +
+        " " +
+        HexDump::ToString(data));
 }
