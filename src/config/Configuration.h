@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../models/GatewayConfig.h"
-
+#include "../utils/Logger.h"
 #include <string>
 
 class Configuration

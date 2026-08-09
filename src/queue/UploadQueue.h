@@ -2,7 +2,7 @@
 
 #include <string>
 #include <cstdint>
-
+#include "../models/GatewayConfig.h"
 class UploadQueue
 {
 public:

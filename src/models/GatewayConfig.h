@@ -2,6 +2,21 @@
 
 #include <string>
 
+#ifdef PLATFORM_WINDOWS
+
+constexpr const char* CONFIG_FILE = "data/gateway.json";
+constexpr const char* STATE_FILE  = "data/gateway_state.json";
+constexpr const char* QUEUE_DIR    = "queue";
+
+#else
+
+constexpr const char* CONFIG_FILE = "/gateway.json";
+constexpr const char* STATE_FILE  = "/gateway_state.json";
+constexpr const char* QUEUE_DIR    = "/queue";
+
+#endif
+
+constexpr int MAX_WIFI_NETWORKS = 8;
 struct GatewayConfig
 {
     struct Gateway
@@ -34,6 +49,17 @@ struct GatewayConfig
 
         int uploadInterval = 2;
 
-        std::string apiKey;
+        
     } cloud;
+
+    struct WiFiCredential
+    {
+        std::string ssid;
+        std::string password;
+    };
+
+    WiFiCredential wifi[MAX_WIFI_NETWORKS];
+
+    int wifiCount = 0;
+    
 };

@@ -30,5 +30,26 @@
         "uploadInterval":10
 
         
-    }
+    },
+
+     "wifi":
+    [
+        {
+            "ssid":"AirFiber-GEW",
+            "password":"Gew@211010"
+        },
+        {
+            "ssid":"GEW",
+            "password":"1234554321"
+        },
+        {
+            "ssid":"GEW-Store",
+            "password":"1234554321"
+        },
+        {
+            "ssid":"GTNC",
+            "password":"1234554321"
+        }
+    ]
+
 }

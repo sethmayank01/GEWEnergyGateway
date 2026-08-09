@@ -13,6 +13,7 @@
 #include "devices/ABBM1M12.h"
 #include "models/MeterReading.h"
 #include "cloud/HttpUploader.h"
+#include "network/WiFiManager.h"
 
 #include <chrono>
 #include <thread>
@@ -31,15 +32,15 @@ bool Gateway::Initialize()
 {
     Logger::Info("Loading configuration...");
 
-    Configuration config;
-
-    if (!config.Load("gateway.json"))
+    if (!m_config.Load(CONFIG_FILE))
     {
         Logger::Error("Configuration is invalid.");
         return false;
     }
 
-    const auto &cfg = config.Get();
+   const auto& cfg = m_config.Get();
+
+ 
 
     Logger::Info("Gateway ID : " + cfg.gateway.gatewayId);
     Logger::Info("API Key    : " + cfg.gateway.apiKey);
@@ -47,7 +48,19 @@ bool Gateway::Initialize()
     Logger::Info("Meter      : " + cfg.meter.manufacturer + " " + cfg.meter.model);
     Logger::Info("COM Port   : " + cfg.meter.port);
     Logger::Info("Cloud URL  : " + cfg.cloud.url);
+ #ifdef PLATFORM_ESP32
 
+m_wifi = new WiFiManager(
+    cfg.wifi,
+    cfg.wifiCount);
+
+if (!m_wifi->Connect())
+{
+    Logger::Warning(
+        "Starting gateway without WiFi.");
+}
+
+#endif
     return true;
 }
 
@@ -57,26 +70,21 @@ void Gateway::Run()
     const uint32_t meterFailureLimit = 3;
     const uint32_t recoveryDelaySeconds = 5;
 
-    Configuration config;
+    const auto& cfg = m_config.Get();
 
-    if (!config.Load("gateway.json"))
-    {
-        Logger::Error("Configuration error.");
-        return;
-    }
     GatewayHealth health;
 
 HttpUploader uploader(
-    config.Get().cloud.url);
+    cfg.cloud.url);
 
 CloudSyncManager cloud(
     uploader,
     health);
 
    #ifdef PLATFORM_ESP32
-    SerialPortESP32 serial(config.Get().meter);
+    SerialPortESP32 serial(cfg.meter);
 #else
-    SerialPortWin serial(config.Get().meter);
+    SerialPortWin serial(cfg.meter);
 #endif
 
     if (!serial.Open())
@@ -88,14 +96,13 @@ CloudSyncManager cloud(
     ModbusRTU modbus(serial);
     GatewayState state;
 
-    state.Load(
-        "data/gateway_state.json");
+    state.Load(STATE_FILE);
 
     state.SetGatewayId(
-        config.Get().gateway.gatewayId);
+        cfg.gateway.gatewayId);
     ABBM1M12 meter(
         modbus,
-        static_cast<uint8_t>(config.Get().meter.slaveId));
+        static_cast<uint8_t>(cfg.meter.slaveId));
 
     while (true)
     {
@@ -203,26 +210,29 @@ CloudSyncManager cloud(
                 std::to_string(reading.energyReceivedWh));
 
             reading.gatewayId =
-                config.Get().gateway.gatewayId;
+                cfg.gateway.gatewayId;
 
             reading.device =
-                config.Get().meter.manufacturer +
+                cfg.meter.manufacturer +
                 "_" +
-                config.Get().meter.model;
+                cfg.meter.model;
             reading.apiKey =
-                config.Get().gateway.apiKey;
+                cfg.gateway.apiKey;
             reading.firmware =
-                config.Get().gateway.firmware;
+                cfg.gateway.firmware;
 
             reading.sequence =
                 state.NextSequence();
 
             state.Save(
-                "data/gateway_state.json");
+                STATE_FILE);
 
             reading.timestamp =
                 TimeUtils::UnixTimestamp();
-
+            
+            #ifdef PLATFORM_ESP32
+m_wifi->MaintainConnection();
+#endif
             cloud.Upload(reading);
         }
         else
@@ -263,7 +273,7 @@ CloudSyncManager cloud(
         health.PrintStatus();
         std::this_thread::sleep_for(
             std::chrono::seconds(
-                config.Get().cloud.uploadInterval));
+                cfg.cloud.uploadInterval));
     }
     serial.Close();
 

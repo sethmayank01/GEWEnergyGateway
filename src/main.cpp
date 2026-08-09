@@ -1,11 +1,15 @@
 #include "application/Application.h"
 
 #ifdef PLATFORM_ESP32
-
+#include <Arduino.h>
 Application app;
 
 void setup()
 {
+    Serial.begin(115200);
+
+    while (!Serial)
+        delay(10);
     app.Run();
 }
 
