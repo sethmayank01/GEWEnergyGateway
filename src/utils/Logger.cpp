@@ -103,7 +103,7 @@ bool Logger::Initialize()
             }
         }
     }
-
+   
     m_logFile =
         LittleFS.open(
             CURRENT_LOG,
@@ -245,6 +245,74 @@ void Logger::WriteLog(
 #endif
 
     RotateIfRequired();
+}
+
+void Logger::Flush()
+{
+    if (!m_initialized)
+        return;
+
+#ifdef PLATFORM_WINDOWS
+
+    if (m_logFile.is_open())
+    {
+        m_logFile.flush();
+    }
+
+#else
+
+    if (m_logFile)
+    {
+        m_logFile.flush();
+
+        //
+        // Give LittleFS time to commit
+        //
+        delay(20);
+    }
+
+#endif
+}
+void Logger::CloseCurrentLog()
+{
+    if (!m_initialized)
+        return;
+
+    Flush();
+
+#ifdef PLATFORM_WINDOWS
+
+    if (m_logFile.is_open())
+        m_logFile.close();
+
+#else
+
+    if (m_logFile)
+        m_logFile.close();
+
+#endif
+}
+
+bool Logger::ReopenCurrentLog()
+{
+#ifdef PLATFORM_WINDOWS
+
+    m_logFile.open(
+        CURRENT_LOG,
+        std::ios::app);
+
+    return m_logFile.is_open();
+
+#else
+
+    m_logFile =
+        LittleFS.open(
+            CURRENT_LOG,
+            FILE_APPEND);
+
+    return m_logFile;
+
+#endif
 }
 
 void Logger::Info(

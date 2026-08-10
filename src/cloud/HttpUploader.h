@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ICloudUploader.h"
-
+#include "../models/ServerCommand.h"
 #include <string>
 
 #ifdef PLATFORM_ESP32
@@ -20,10 +20,20 @@ public:
 
     bool Upload(
         const std::string& json) override;
-
+    
+        bool UploadLog(
+    const std::string& localFile,
+    const std::string& remoteName) override;
+    
+    const std::vector<ServerCommand>&
+GetCommands() const;    
 private:
 
     std::string m_url;
+    std::vector<ServerCommand> m_commands;
+
+void ParseResponse(
+    const std::string& response);
 
 #ifdef PLATFORM_ESP32
 
@@ -38,6 +48,7 @@ private:
     HTTPClient m_http;
 
     bool m_connected = false;
+
 
 #endif
 

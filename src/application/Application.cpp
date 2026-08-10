@@ -10,10 +10,8 @@ Application::Application()
 
 int Application::Run()
 {
-    Logger::Info("------------------------------------");
-    Logger::Info("GEW Energy Gateway");
-    Logger::Info("Version 0.1.0");
-    Logger::Info("------------------------------------");
+    
+   
 
     Gateway gateway;
 

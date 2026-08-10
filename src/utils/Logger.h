@@ -17,6 +17,12 @@ public:
 
     static void Shutdown();
 
+    static void Flush();
+
+    static void CloseCurrentLog();
+
+    static bool ReopenCurrentLog();
+
     static void Info(
         const std::string& message);
 

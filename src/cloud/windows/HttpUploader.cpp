@@ -225,3 +225,22 @@ if (!responseBody.empty())
 HttpUploader::~HttpUploader()
 {
 }
+
+bool HttpUploader::UploadLog(
+    const std::string& localFile,
+    const std::string& remoteName)
+{
+    (void)localFile;
+    (void)remoteName;
+
+    Logger::Info(
+        "UploadLog() not implemented on Windows.");
+
+    return true;
+}
+
+const std::vector<ServerCommand>&
+HttpUploader::GetCommands() const
+{
+    return m_commands;
+}

@@ -8,8 +8,10 @@
 CloudSyncManager::CloudSyncManager(
     ICloudUploader& uploader,
     GatewayHealth& health)
-    : m_uploader(uploader),
-      m_health(health)
+    :
+    m_uploader(uploader),
+    m_commandManager(uploader),
+    m_health(health)
 {
     m_health.SetPendingUploads(
         m_queue.Count());
@@ -30,6 +32,8 @@ bool CloudSyncManager::Upload(
     {
         Logger::Info(
             "Cloud Upload Successful");
+            m_commandManager.Process(
+        m_uploader.GetCommands());
         m_health.UploadSuccess();
         return true;
     }

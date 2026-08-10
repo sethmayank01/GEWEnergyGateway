@@ -42,6 +42,11 @@ bool Configuration::Load(const std::string& filename)
 }
     Logger::Info("LittleFS mounted.");
 
+     if (!Logger::Initialize())
+    {
+        Serial.println("Logger initialization failed.");
+    }
+
     File file = LittleFS.open(filename.c_str(), "r");
 
     if (!file)

@@ -20,6 +20,7 @@
 
 #ifdef PLATFORM_ESP32
 #include "platform/esp32/SerialPortESP32.h"
+#include <esp_system.h>
 #else
 #include "platform/windows/SerialPortWin.h"
 #endif
@@ -40,8 +41,15 @@ bool Gateway::Initialize()
 
    const auto& cfg = m_config.Get();
 
- 
-
+    Logger::Info("------------------------------------");
+    Logger::Info("GEW Energy Gateway");
+    Logger::Info("Version 0.1.0");
+    Logger::Info("------------------------------------"); 
+    #ifdef PLATFORM_ESP32
+    Logger::Info(
+    "Reset Reason : " +
+    std::to_string(esp_reset_reason()));
+    #endif
     Logger::Info("Gateway ID : " + cfg.gateway.gatewayId);
     Logger::Info("API Key    : " + cfg.gateway.apiKey);
     Logger::Info("Firmware   : " + cfg.gateway.firmware);
