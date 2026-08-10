@@ -1,7 +1,81 @@
 #include "GatewayHealth.h"
-
+#ifdef PLATFORM_ESP32
+#include <Adafruit_NeoPixel.h>
+#endif
 #include "../utils/Logger.h"
 #include "../utils/TimeUtils.h"
+
+GatewayHealth::GatewayHealth()
+{
+#ifdef PLATFORM_ESP32
+    InitializeLed();
+#endif
+}
+
+#ifdef PLATFORM_ESP32
+
+
+namespace
+{
+   constexpr uint8_t LED_PIN = 21;
+
+Adafruit_NeoPixel led(
+    1,
+    LED_PIN,
+    NEO_RGB + NEO_KHZ800);
+}
+
+void GatewayHealth::InitializeLed()
+{
+    led.begin();
+    led.clear();
+    led.show();
+
+    m_ledInitialized = true;
+
+    SetLedColor(255, 0, 0);     // Booting
+}
+
+void GatewayHealth::SetLedColor(
+    uint8_t r,
+    uint8_t g,
+    uint8_t b)
+{
+    if (!m_ledInitialized)
+        return;
+
+    led.setPixelColor(
+        0,
+        led.Color(r, g, b));
+
+    led.show();
+}
+
+#endif
+
+void GatewayHealth::UpdateLed()
+{
+#ifdef PLATFORM_ESP32
+
+    if (!m_cloudConnected)
+    {
+        SetLedColor(255, 0, 255);      // Purple
+    }
+    else if (!m_meterConnected)
+    {
+        SetLedColor(255, 255, 0);      // Yellow
+    }
+    else if (m_pendingUploads > 0)
+    {
+        SetLedColor(255, 120, 0);      // Orange
+    }
+    else
+    {
+        SetLedColor(0, 255, 0);        // Green
+    }
+
+#endif
+}
 
 void GatewayHealth::MeterReadSuccess()
 {
@@ -13,6 +87,7 @@ void GatewayHealth::MeterReadSuccess()
         TimeUtils::UnixTimestamp();
     m_lastError.clear();
     m_consecutiveMeterFailures = 0;
+    UpdateLed();
 }
 
 void GatewayHealth::MeterReadFailure()
@@ -25,6 +100,7 @@ void GatewayHealth::MeterReadFailure()
 
     m_lastError =
         "Meter Read Failed";
+        UpdateLed();
 }
 
 uint32_t GatewayHealth::GetConsecutiveMeterFailures() const
@@ -46,6 +122,7 @@ void GatewayHealth::UploadSuccess()
     m_lastUploadTimestamp =
         TimeUtils::UnixTimestamp();
     m_lastError.clear();
+    UpdateLed();
 }
 
 void GatewayHealth::UploadFailure()
@@ -56,6 +133,7 @@ void GatewayHealth::UploadFailure()
 
     m_lastError =
         "Cloud Upload Failed";
+        UpdateLed();
 }
 
 void GatewayHealth::SetPendingUploads(
@@ -106,4 +184,5 @@ void GatewayHealth::PrintStatus() const
     }
 
     Logger::Info("==================================");
+   
 }

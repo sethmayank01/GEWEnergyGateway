@@ -9,6 +9,8 @@ class GatewayHealth
 {
 public:
 
+    GatewayHealth();
+
     void MeterReadSuccess();
 
     void MeterReadFailure();
@@ -30,6 +32,14 @@ public:
 
 
 private:
+     void InitializeLed();
+
+    void UpdateLed();
+
+    void SetLedColor(
+        uint8_t red,
+        uint8_t green,
+        uint8_t blue);
 
     bool m_meterConnected = false;
 
@@ -56,6 +66,10 @@ private:
 
     uint32_t m_consecutiveMeterFailures = 0;
 
+   #ifdef PLATFORM_ESP32
 
+    bool m_ledInitialized = false;
+
+#endif
     std::string m_lastError;
 };
