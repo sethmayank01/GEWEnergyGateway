@@ -181,14 +181,12 @@ bool ABBM1M12::ReadPowerBlock(
 {
     std::vector<uint8_t> payload;
 
-
     ModbusException result =
         m_modbus.ReadHoldingRegisters(
             m_slave,
             ABBRegisters::PowerBlock::Start,
             ABBRegisters::PowerBlock::Count,
             payload);
-
 
     if (result != ModbusException::None)
     {
@@ -199,11 +197,14 @@ bool ABBM1M12::ReadPowerBlock(
         return false;
     }
 
-
     ByteBuffer buffer(payload);
 
 
+    // ========================================
     // Active Power
+    // 40101 - 40107
+    // ========================================
+
     reading.activePower =
         buffer.ReadFloat(
             FloatFormat::ByteSwapped,
@@ -225,8 +226,11 @@ bool ABBM1M12::ReadPowerBlock(
             12);
 
 
-
+    // ========================================
     // Reactive Power
+    // 40109 - 40115
+    // ========================================
+
     reading.reactivePower =
         buffer.ReadFloat(
             FloatFormat::ByteSwapped,
@@ -248,47 +252,53 @@ bool ABBM1M12::ReadPowerBlock(
             28);
 
 
+    // ========================================
+    // Power Factor
+    // 40117 - 40123
+    // ========================================
 
-    // Apparent Power
-    reading.apparentPower =
+    reading.powerFactorAverage =
         buffer.ReadFloat(
             FloatFormat::ByteSwapped,
             32);
 
-    reading.apparentPowerL1 =
+    reading.powerFactorL1 =
         buffer.ReadFloat(
             FloatFormat::ByteSwapped,
             36);
 
-    reading.apparentPowerL2 =
+    reading.powerFactorL2 =
         buffer.ReadFloat(
             FloatFormat::ByteSwapped,
             40);
 
-    reading.apparentPowerL3 =
+    reading.powerFactorL3 =
         buffer.ReadFloat(
             FloatFormat::ByteSwapped,
             44);
 
 
+    // ========================================
+    // Apparent Power
+    // 40125 - 40131
+    // ========================================
 
-    // Power Factor
-    reading.powerFactorAverage =
+    reading.apparentPower =
         buffer.ReadFloat(
             FloatFormat::ByteSwapped,
             48);
 
-    reading.powerFactorL1 =
+    reading.apparentPowerL1 =
         buffer.ReadFloat(
             FloatFormat::ByteSwapped,
             52);
 
-    reading.powerFactorL2 =
+    reading.apparentPowerL2 =
         buffer.ReadFloat(
             FloatFormat::ByteSwapped,
             56);
 
-    reading.powerFactorL3 =
+    reading.apparentPowerL3 =
         buffer.ReadFloat(
             FloatFormat::ByteSwapped,
             60);
