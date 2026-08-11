@@ -46,14 +46,21 @@ std::string JsonBuilder::Build(
         << "\"voltage\":{"
             << "\"l1\":" << reading.voltageL1 << ","
             << "\"l2\":" << reading.voltageL2 << ","
-            << "\"l3\":" << reading.voltageL3
+            << "\"l3\":" << reading.voltageL3 << ","
+            << "\"l12\":" << reading.voltageL12 << ","
+            << "\"l23\":" << reading.voltageL23 << ","
+            << "\"l31\":" << reading.voltageL31 << ","
+            << "\"lnAverage\":" << reading.voltageLNAverage << ","
+            << "\"llAverage\":" << reading.voltageLLAverage 
+            
         << "},"
 
-
+        
         << "\"current\":{"
             << "\"l1\":" << reading.currentL1 << ","
             << "\"l2\":" << reading.currentL2 << ","
-            << "\"l3\":" << reading.currentL3
+            << "\"l3\":" << reading.currentL3 << ","
+            << "\"average\":" << reading.currentAverage
         << "},"
 
 
