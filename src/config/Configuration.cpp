@@ -46,6 +46,8 @@ bool Configuration::Load(const std::string& filename)
     {
         Serial.println("Logger initialization failed.");
     }
+    //Mayank Temp Remove Logs 
+    //Logger::DeleteLogs();
 
     File file = LittleFS.open(filename.c_str(), "r");
 

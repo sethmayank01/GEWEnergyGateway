@@ -23,6 +23,8 @@ public:
 
     static bool ReopenCurrentLog();
 
+    static void DeleteLogs();
+
     static void Info(
         const std::string& message);
 
@@ -43,7 +45,7 @@ private:
         const std::string& message);
 
     static void RotateIfRequired();
-
+    
 #ifdef PLATFORM_ESP32
     static File m_logFile;
 #else
