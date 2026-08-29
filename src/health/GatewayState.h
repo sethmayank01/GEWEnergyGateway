@@ -22,6 +22,8 @@ public:
 
     uint64_t GetSequence() const;
 
+    void SetSequence(uint64_t sequence);
+
 
     void SetGatewayId(
         const std::string& id);

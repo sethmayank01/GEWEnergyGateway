@@ -90,7 +90,7 @@ struct MeterReading
     // Energy
     //
     float energyReceivedWh = 0.0f;
-    float energyDeliveredWh = 0.0f;
+    float energyReceivedVAh = 0.0f;
 
 
 

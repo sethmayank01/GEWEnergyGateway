@@ -7,10 +7,24 @@
 
 CloudSyncManager::CloudSyncManager(
     ICloudUploader& uploader,
-    GatewayHealth& health)
+    GatewayHealth& health,
+    CommandHandlers handlers)
     :
     m_uploader(uploader),
-    m_commandManager(uploader),
+    m_commandManager(
+        uploader,
+        [&]() {
+            handlers.flushQueue = [this](std::string& result) {
+                const size_t before = m_queue.Count();
+                const bool ok = RetryPending();
+                const size_t after = m_queue.Count();
+                result = "Queue flush: " + std::to_string(before) +
+                         " pending before, " + std::to_string(after) +
+                         " after";
+                return ok;
+            };
+            return handlers;
+        }()),
     m_health(health)
 {
     m_health.SetPendingUploads(
@@ -26,7 +40,17 @@ bool CloudSyncManager::Upload(
         JsonBuilder::Build(reading);
 
     Logger::Info("JSON Payload:");
-    Logger::Info(json);
+    std::string redactedJson = json;
+    const std::string apiKeyMarker = "\"apiKey\":\"";
+    const size_t apiKeyStart = redactedJson.find(apiKeyMarker);
+    if (apiKeyStart != std::string::npos)
+    {
+        const size_t valueStart = apiKeyStart + apiKeyMarker.size();
+        const size_t valueEnd = redactedJson.find('"', valueStart);
+        if (valueEnd != std::string::npos)
+            redactedJson.replace(valueStart, valueEnd - valueStart, "[REDACTED]");
+    }
+    Logger::Info(redactedJson);
 
     if (m_uploader.Upload(json))
     {
@@ -57,10 +81,10 @@ bool CloudSyncManager::Upload(
     return false;
 }
 
-void CloudSyncManager::RetryPending()
+bool CloudSyncManager::RetryPending()
 {
     if (!m_queue.HasPending())
-        return;
+        return true;
 
     Logger::Info(
         "Processing pending upload queue...");
@@ -70,7 +94,7 @@ void CloudSyncManager::RetryPending()
             m_queue.GetOldestFile();
 
         if (file.empty())
-            return;
+            return false;
 
         Logger::Info(
             "Retrying queued upload: " + file);
@@ -83,7 +107,7 @@ void CloudSyncManager::RetryPending()
             Logger::Error(
                 "Unable to read queued file.");
 
-            return;
+            return false;
         }
 
         if (m_uploader.Upload(json))
@@ -100,7 +124,26 @@ void CloudSyncManager::RetryPending()
             Logger::Error(
                 "Queued upload failed.");
 
-            return;
+            return false;
         }
     }
+    return true;
+}
+
+bool CloudSyncManager::Heartbeat(
+    const std::string& firmware,
+    bool meterConnected)
+{
+    if (!m_uploader.SendHeartbeat(
+            firmware,
+            meterConnected,
+            m_queue.Count()))
+    {
+        Logger::Warning("Gateway heartbeat failed.");
+        return false;
+    }
+
+    Logger::Info("Gateway heartbeat successful.");
+    m_commandManager.Process(m_uploader.GetCommands());
+    return true;
 }

@@ -3,7 +3,89 @@
 #include "../../utils/Logger.h"
 
 #include <WiFi.h>
+#include <Preferences.h>
 #include <time.h>
+
+namespace
+{
+    constexpr const char* PROVISIONING_NAMESPACE = "gew_setup";
+    constexpr const char* WIFI_COUNT_KEY = "wifi_count";
+    constexpr size_t MAX_PROVISIONED_NETWORKS = 8;
+
+    void SynchronizeClock()
+    {
+        time_t now = 0;
+        time(&now);
+        if (now > 1700000000)
+            return;
+
+        Logger::Info("Synchronizing time...");
+        configTime(19800, 0, "pool.ntp.org", "time.nist.gov");
+        const uint32_t started = millis();
+        while (millis() - started < 15000)
+        {
+            time(&now);
+            if (now > 1700000000)
+            {
+                Logger::Info("Time synchronized. Unix Time : " +
+                             std::to_string(now));
+                return;
+            }
+            delay(500);
+        }
+        Logger::Warning("Time synchronization timed out.");
+    }
+
+    String SsidKey(size_t index)
+    {
+        return String("ssid") + static_cast<unsigned int>(index);
+    }
+
+    String PasswordKey(size_t index)
+    {
+        return String("pass") + static_cast<unsigned int>(index);
+    }
+
+    bool ConnectProvisionedNetworks()
+    {
+        Preferences preferences;
+        if (!preferences.begin(PROVISIONING_NAMESPACE, true))
+            return false;
+
+        size_t count = preferences.getUChar(WIFI_COUNT_KEY, 0);
+        if (count > MAX_PROVISIONED_NETWORKS)
+            count = MAX_PROVISIONED_NETWORKS;
+
+        for (size_t i = 0; i < count; ++i)
+        {
+            const String ssid = preferences.getString(SsidKey(i).c_str(), "");
+            const String password = preferences.getString(PasswordKey(i).c_str(), "");
+            if (ssid.isEmpty())
+                continue;
+
+            Logger::Info(
+                "Runtime WiFi attempt " + std::to_string(i + 1) + "/" +
+                std::to_string(count) + ": " + std::string(ssid.c_str()));
+
+            WiFi.mode(WIFI_STA);
+            WiFi.begin(ssid.c_str(), password.c_str());
+            const uint32_t started = millis();
+            while (WiFi.status() != WL_CONNECTED && millis() - started < 10000)
+                delay(250);
+
+            if (WiFi.status() == WL_CONNECTED)
+            {
+                preferences.end();
+                return true;
+            }
+
+            WiFi.disconnect(false, false);
+        }
+
+        preferences.end();
+        return false;
+    }
+}
 
 WiFiManager::WiFiManager(
     const GatewayConfig::WiFiCredential wifi[],
@@ -16,6 +98,23 @@ WiFiManager::WiFiManager(
 
 bool WiFiManager::Connect()
 {
+    // ProvisioningManager owns credentials on deployed ESP32 gateways. When
+    // gateway.json contains no legacy Wi-Fi list, retain/recover that station
+    // connection instead of disconnecting it.
+    if (m_wifiCount == 0)
+    {
+        if (WiFi.status() == WL_CONNECTED)
+        {
+            SynchronizeClock();
+            return true;
+        }
+
+        const bool connected = ConnectProvisionedNetworks();
+        if (connected)
+            SynchronizeClock();
+        return connected;
+    }
+
     WiFi.mode(WIFI_STA);
 
     WiFi.disconnect(true);
@@ -60,63 +159,7 @@ bool WiFiManager::Connect()
                     "RSSI : " +
                     std::to_string(WiFi.RSSI()));
 
-                //
-                // Synchronize system clock
-                //
-                Logger::Info(
-                    "Synchronizing time...");
-
-                configTime(
-                    19800,             // UTC+5:30
-                    0,
-                    "pool.ntp.org",
-                    "time.nist.gov");
-
-                time_t now = 0;
-
-                uint32_t syncStart = millis();
-
-                while (millis() - syncStart < 15000)
-                {
-                    time(&now);
-
-                    if (now > 1700000000)
-                        break;
-
-                    delay(500);
-                }
-
-                if (now > 1700000000)
-                {
-                    Logger::Info(
-                        "Time synchronized.");
-
-                    Logger::Info(
-                        "Unix Time : " +
-                        std::to_string(now));
-
-                    struct tm timeinfo;
-
-                    if (localtime_r(&now, &timeinfo))
-                    {
-                        char buffer[32];
-
-                        strftime(
-                            buffer,
-                            sizeof(buffer),
-                            "%d-%m-%Y %H:%M:%S",
-                            &timeinfo);
-
-                        Logger::Info(
-                            "Local Time : "
-                            + std::string(buffer));
-                    }
-                }
-                else
-                {
-                    Logger::Warning(
-                        "Time synchronization timed out.");
-                }
+                SynchronizeClock();
 
                 return true;
             }

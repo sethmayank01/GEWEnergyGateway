@@ -12,6 +12,7 @@
 class Logger
 {
 public:
+    enum class Level { Debug = 0, Info = 1, Warning = 2, Error = 3 };
 
     static bool Initialize();
 
@@ -24,6 +25,9 @@ public:
     static bool ReopenCurrentLog();
 
     static void DeleteLogs();
+
+    static void SetLevel(Level level);
+    static Level GetLevel();
 
     static void Info(
         const std::string& message);
@@ -54,4 +58,5 @@ private:
 
     static bool m_initialized;
     static uint32_t m_logCounter;
+    static Level m_level;
 };

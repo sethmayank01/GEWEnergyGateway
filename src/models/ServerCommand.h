@@ -8,5 +8,7 @@ struct ServerCommand
 
     std::string command;
 
-    std::string value;
+    // Raw JSON object supplied by the server. Parameterless commands receive
+    // "{}", preserving compatibility with SEND_LOGS.
+    std::string parameters = "{}";
 };

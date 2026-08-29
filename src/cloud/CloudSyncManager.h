@@ -13,14 +13,19 @@ public:
 
       CloudSyncManager(
         ICloudUploader& uploader,
-        GatewayHealth& health);
+        GatewayHealth& health,
+        CommandHandlers handlers = {});
 
     bool Upload(
         const MeterReading& reading);
 
+    bool Heartbeat(
+        const std::string& firmware,
+        bool meterConnected);
+
 private:
 
-    void RetryPending();
+    bool RetryPending();
     GatewayHealth& m_health;
     ICloudUploader& m_uploader;
     UploadQueue m_queue;

@@ -25,6 +25,7 @@ struct GatewayConfig
         std::string apiKey;
         std::string firmware;
         std::string hardware;
+        uint64_t lastSequence = 0;
     } gateway;
 
     struct Meter

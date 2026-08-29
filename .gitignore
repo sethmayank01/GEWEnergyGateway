@@ -21,6 +21,7 @@ build-tools/
 
 # PlatformIO
 .pio/
+src/provisioning/DeviceCredentials.local.h
 
 # VSCode
 .vscode/

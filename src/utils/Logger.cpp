@@ -57,6 +57,7 @@ namespace
 bool Logger::m_initialized = false;
 
 uint32_t Logger::m_logCounter = 0;
+Logger::Level Logger::m_level = Logger::Level::Debug;
 
 #ifdef PLATFORM_ESP32
 
@@ -579,6 +580,8 @@ bool Logger::ReopenCurrentLog()
 void Logger::Info(
     const std::string& message)
 {
+    if (m_level > Level::Info)
+        return;
     WriteLog(
         "INFO",
         message);
@@ -592,6 +595,8 @@ void Logger::Info(
 void Logger::Warning(
     const std::string& message)
 {
+    if (m_level > Level::Warning)
+        return;
     WriteLog(
         "WARNING",
         message);
@@ -619,6 +624,8 @@ void Logger::Hex(
     const std::string& prefix,
     const std::vector<uint8_t>& data)
 {
+    if (m_level > Level::Debug)
+        return;
     WriteLog(
         "HEX",
         prefix +
@@ -641,4 +648,14 @@ void Logger::DeleteLogs()
     }
 
 #endif
+}
+
+void Logger::SetLevel(Level level)
+{
+    m_level = level;
+}
+
+Logger::Level Logger::GetLevel()
+{
+    return m_level;
 }

@@ -173,6 +173,11 @@ reading.energyReceivedWh =
         FloatFormat::ByteSwapped,
         20);
 
+        reading.energyReceivedVAh =
+    buffer.ReadFloat(
+        FloatFormat::ByteSwapped,
+        24);
+
     return true;
 }
 

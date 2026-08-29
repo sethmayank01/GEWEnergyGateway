@@ -10,6 +10,7 @@ void setup()
 
     while (!Serial)
         delay(10);
+
     app.Run();
 }
 

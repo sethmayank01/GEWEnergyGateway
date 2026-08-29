@@ -9,8 +9,12 @@
 #pragma comment(lib, "winhttp.lib")
 
 HttpUploader::HttpUploader(
-    const std::string& url)
-    : m_url(url)
+    const std::string& url,
+    const std::string& gatewayId,
+    const std::string& apiKey)
+    : m_url(url),
+      m_gatewayId(gatewayId),
+      m_apiKey(apiKey)
 {
     std::wstring wurl(url.begin(), url.end());
 
@@ -243,4 +247,48 @@ const std::vector<ServerCommand>&
 HttpUploader::GetCommands() const
 {
     return m_commands;
+}
+
+bool HttpUploader::ReportCommandStatus(
+    uint32_t commandId,
+    const std::string& status,
+    const std::string& message)
+{
+    (void)commandId;
+    (void)status;
+    (void)message;
+    Logger::Warning("Command acknowledgement is not implemented on Windows.");
+    return false;
+}
+
+bool HttpUploader::SendHeartbeat(
+    const std::string& firmware,
+    bool meterConnected,
+    size_t pendingUploads)
+{
+    (void)firmware;
+    (void)meterConnected;
+    (void)pendingUploads;
+    Logger::Warning("Heartbeat is not implemented on Windows.");
+    return false;
+}
+
+bool HttpUploader::InstallFirmware(
+    uint32_t commandId,
+    std::string& installedVersion,
+    std::string& resultMessage)
+{
+    (void)commandId;
+    installedVersion.clear();
+    resultMessage = "Firmware OTA is not supported on Windows";
+    return false;
+}
+
+bool HttpUploader::RefreshConfiguration(
+    uint32_t commandId,
+    std::string& resultMessage)
+{
+    (void)commandId;
+    resultMessage = "Remote configuration update is not supported on Windows";
+    return false;
 }

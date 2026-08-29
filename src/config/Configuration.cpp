@@ -1,4 +1,5 @@
 #include "Configuration.h"
+#include "../models/BuildInfo.h"
 
 
 #ifdef PLATFORM_WINDOWS
@@ -36,18 +37,22 @@ bool Configuration::Load(const std::string& filename)
 
 #else
     Logger::Info("Mounting LittleFS...");
-    if (!LittleFS.begin())
-{
-    return false;
-}
+    if (!LittleFS.begin(false))
+    {
+        Serial.println("LittleFS mount failed; formatting filesystem...");
+        if (!LittleFS.begin(true))
+            return false;
+    }
     Logger::Info("LittleFS mounted.");
 
-     if (!Logger::Initialize())
-    {
+    if (!Logger::Initialize())
         Serial.println("Logger initialization failed.");
+
+    if (!LittleFS.exists(filename.c_str()))
+    {
+        Logger::Warning("Configuration file does not exist: " + filename);
+        return false;
     }
-    //Mayank Temp Remove Logs 
-    //Logger::DeleteLogs();
 
     File file = LittleFS.open(filename.c_str(), "r");
 
@@ -79,9 +84,23 @@ JsonObject gateway = j["gateway"].as<JsonObject>();
 
     m_config.gateway.firmware =
     JSON_GET_STRING(gateway, "firmware","");
+
+#ifdef PLATFORM_ESP32
+    // The running binary is authoritative after an OTA update; gateway.json
+    // may still contain the version reported by the previous image.
+    m_config.gateway.firmware = GEW_FIRMWARE_VERSION;
+#endif
    
     m_config.gateway.hardware =
     JSON_GET_STRING(gateway, "hardware","");
+
+#ifdef PLATFORM_WINDOWS
+    m_config.gateway.lastSequence =
+        gateway.value("lastSequence", 0ULL);
+#else
+    m_config.gateway.lastSequence =
+        gateway["lastSequence"] | 0ULL;
+#endif
   
   #ifdef PLATFORM_WINDOWS
 auto meter = j["meter"];
@@ -167,11 +186,6 @@ bool Configuration::Validate() const
 #ifdef PLATFORM_WINDOWS
 
     if (m_config.meter.port.empty())
-        return false;
-
-#else
-
-    if (m_config.wifiCount == 0)
         return false;
 
 #endif

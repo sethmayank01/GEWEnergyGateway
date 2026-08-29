@@ -14,7 +14,9 @@ class HttpUploader : public ICloudUploader
 public:
 
     explicit HttpUploader(
-        const std::string& url);
+        const std::string& url,
+        const std::string& gatewayId,
+        const std::string& apiKey);
 
     ~HttpUploader();
 
@@ -27,9 +29,30 @@ public:
     
     const std::vector<ServerCommand>&
 GetCommands() const;    
+
+    bool ReportCommandStatus(
+        uint32_t commandId,
+        const std::string& status,
+        const std::string& message) override;
+
+    bool SendHeartbeat(
+        const std::string& firmware,
+        bool meterConnected,
+        size_t pendingUploads) override;
+
+    bool InstallFirmware(
+        uint32_t commandId,
+        std::string& installedVersion,
+        std::string& resultMessage) override;
+
+    bool RefreshConfiguration(
+        uint32_t commandId,
+        std::string& resultMessage) override;
 private:
 
     std::string m_url;
+    std::string m_gatewayId;
+    std::string m_apiKey;
     std::vector<ServerCommand> m_commands;
 
 void ParseResponse(

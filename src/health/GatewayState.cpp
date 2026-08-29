@@ -130,9 +130,10 @@ bool GatewayState::Save(
         return false;
     }
 
+    const std::string temporaryFilename = filename + ".tmp";
     File file =
         LittleFS.open(
-            filename.c_str(),
+            temporaryFilename.c_str(),
             "w");
 
     if (!file)
@@ -155,7 +156,15 @@ bool GatewayState::Save(
         j,
         file);
 
+    file.flush();
     file.close();
+
+    if (!LittleFS.rename(temporaryFilename.c_str(), filename.c_str()))
+    {
+        LittleFS.remove(temporaryFilename.c_str());
+        Logger::Error("Unable to activate gateway state.");
+        return false;
+    }
 
     return true;
 
@@ -219,4 +228,9 @@ uint64_t GatewayState::NextSequence()
 uint64_t GatewayState::GetSequence() const
 {
     return m_sequence;
+}
+
+void GatewayState::SetSequence(uint64_t sequence)
+{
+    m_sequence = sequence;
 }

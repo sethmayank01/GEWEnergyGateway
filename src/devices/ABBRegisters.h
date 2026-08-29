@@ -143,6 +143,6 @@ namespace ABBRegisters
     namespace CurrentBlock
     {
         constexpr uint16_t Start = 148;
-        constexpr uint16_t Count = 12;
+        constexpr uint16_t Count = 14;
     }
 }
